@@ -4,10 +4,16 @@ import './App.css';
 
 function App() {
   return (
-    <div className="">
-      <header className="text-2xl underline">
-        HELLO TAILWIND!
+    <div className=" ">
+      <header className="flex items-center justify-between flex-wrap bg-purple-900 p-6">
+        <h1 className="text-2xl text-white font-thin">
+          meta-network-data-viewer
+        </h1>
       </header>
+      <div className="max-w-md mx-auto bg-white" >
+        
+
+      </div>
     </div>
   );
 }
