@@ -1,9 +1,7 @@
 import type { NextPage } from 'next'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
-// import ReactJson from 'react-json-view'
-import jsonTest from '../public/jsonTest.json'
 const md = require('markdown-it')();
 import ipfsGatewayList from '../ipfs-gateway.json'
 import renderHTML from 'react-render-html';
@@ -18,23 +16,17 @@ const Home: NextPage = () => {
   const [metaData, setMetaData] = useState<any>({})
 
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
-  const JsonView = () => {
-    return <DynamicReactJson src={metaData} displayDataTypes={false} defaultValue={{ ok: false }} />
-  }
-  
 
-  // useEffect(() => { }, [ipfsGateway])
-  useEffect(() => {
-
-    const getCidContent = async () => {
-      try {
-        const content = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`)).data
-        setMetaData(content)
-      } catch (error) {
-        alert(`request fail`)
-      }
+  const getCidContent = useCallback(async () => {
+    try {
+      const content = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`)).data
+      setMetaData(content)
+    } catch (error) {
+      alert(`request fail`)
     }
+  }, [cid, ipfsGateway])
 
+  useEffect(() => {
     if (cid && ipfsGateway) {
       getCidContent()
     }
@@ -75,7 +67,7 @@ const Home: NextPage = () => {
           <h2 className="font-thin text-sm text-purple-700">Origin Metadata</h2>
           <div className="p-2 border-2 border-purple-700 rounded mt-2">
             <div className="overflow-auto">
-              {JsonView()}
+              <DynamicReactJson src={metaData} displayDataTypes={false} defaultValue={{ ok: false }} />
             </div>
 
           </div>
