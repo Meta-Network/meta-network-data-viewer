@@ -79,7 +79,7 @@ const Home: NextPage = () => {
           <h2 className="font-thin text-sm text-purple-700">Origin Metadata</h2>
           <div className="p-2 border-2 border-purple-700 rounded mt-2">
             <div className="overflow-auto">
-              <DynamicReactJson src={metaData} displayDataTypes={false} defaultValue={{ ok: false }} />
+              <DynamicReactJson src={metaData} displayDataTypes={false} defaultValue={{ ok: false }} name={false} />
             </div>
 
           </div>
