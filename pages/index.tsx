@@ -1,25 +1,44 @@
 import type { NextPage } from 'next'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 // import ReactJson from 'react-json-view'
 import jsonTest from '../public/jsonTest.json'
 const md = require('markdown-it')();
+import ipfsGatewayList from '../ipfs-gateway.json'
 import renderHTML from 'react-render-html';
+import axios from 'axios';
 
 
 const Home: NextPage = () => {
-  const [cid, setCid] = useState('Qme3PxAANAXHNqmw4r1UV9uqgYdD7e3A8HcXYVE16ZpgQk')
-  const [ipfsGateway, setIpfsGateway] = useState('ipfs.io')
+  const [cid, setCid] = useState('QmSc7Sb132M12bm9owwziEWLf1ibiMCLU1vRnc2P3JMxFN')
+  const [ipfsGateway, setIpfsGateway] = useState('https://ipfs.io/ipfs/:hash')
   const [dig, setDig] = useState('0x2b44d342754515f18a457df40edbfad9f2f2066e55b21e084a1222b5670c166541c48076a19e71cb09d8154fe460a60e57809f9907158d6a2a5b705c804c4e871b')
   const [sig, setSig] = useState('0x2b44d342754515f18a457df40edbfad9f2f2066e55b21e084a1222b5670c166541c48076a19e71cb09d8154fe460a60e57809f9907158d6a2a5b705c804c4e871b')
+  const [metaData, setMetaData] = useState<any>({})
 
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
   const JsonView = () => {
-    return <DynamicReactJson src={jsonTest} displayDataTypes={false} />
+    return <DynamicReactJson src={metaData} displayDataTypes={false} defaultValue={{ ok: false }} />
   }
+  
 
   // useEffect(() => { }, [ipfsGateway])
+  useEffect(() => {
+
+    const getCidContent = async () => {
+      try {
+        const content = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`)).data
+        setMetaData(content)
+      } catch (error) {
+        alert(`request fail`)
+      }
+    }
+
+    if (cid && ipfsGateway) {
+      getCidContent()
+    }
+  }, [cid, ipfsGateway])
 
   return (
     <div>
@@ -39,9 +58,9 @@ const Home: NextPage = () => {
           <div className="w-full md:w-1/2 my-2">
             <select value={ipfsGateway} onChange={(e) => { setIpfsGateway(e.target.value) }}
               className="w-full font-thin p-2 rounded border-2 text-purple-700 border-purple-700 placeholder-purple-200 h-10">
-              <option>cloudflare-ipfs.com</option>
-              <option>ipfs.infura.io</option>
-              <option selected>ipfs.io</option>
+              {ipfsGatewayList.map((item: string, index) => {
+                return <option key={index} value={item}>{item.replace(':hash', '')}</option>
+              })}
             </select>
           </div>
           <div className="w-full md:w-1/2 my-2">
@@ -97,7 +116,4 @@ const Home: NextPage = () => {
 }
 
 export default Home
-function useEffect(arg0: () => void, arg1: undefined[]) {
-  throw new Error('Function not implemented.');
-}
 
