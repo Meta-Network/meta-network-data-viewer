@@ -27,7 +27,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="p-6 bg-purple-900">
+      <header className="p-4 md:p-6 bg-purple-900">
         <h1 className="text-2xl font-thin text-white">meta-network-data-viewer</h1>
       </header>
 
