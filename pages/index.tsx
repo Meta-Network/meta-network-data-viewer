@@ -40,7 +40,7 @@ const Home: NextPage = () => {
   }, [ipfsGateway])
 
   useEffect(() => {
-    setCid('QmSc7Sb132M12bm9owwziEWLf1ibiMCLU1vRnc2P3JMxFN');
+    setCid('Qme3PxAANAXHNqmw4r1UV9uqgYdD7e3A8HcXYVE16ZpgQk');
     setIpfsGateway('https://ipfs.io/ipfs/:hash');
   }, [])
 
