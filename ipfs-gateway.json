@@ -1,0 +1,5 @@
+[
+  "https://cloudflare-ipfs.com/ipfs/:hash",
+  "https://gateway.ipfs.io/ipfs/:hash",
+  "https://ipfs.io/ipfs/:hash"
+]
