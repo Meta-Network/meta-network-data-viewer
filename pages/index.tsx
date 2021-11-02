@@ -51,16 +51,16 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="my-2 mt-8">
-          <h2>Origin Metadata</h2>
-          <div className="p-2 border-2 border-purple-700  break-all rounded mt-2">
-            <div>
+          <h2 className="font-thin text-sm text-purple-700">Origin Metadata</h2>
+          <div className="p-2 border-2 border-purple-700 rounded mt-2">
+            <div className="overflow-auto">
               {JsonView()}
             </div>
 
           </div>
         </div>
-        <div className="mt-8">
-          <h2>Digest and validation</h2>
+        <div className="mt-4">
+          <h2 className="font-thin text-sm text-purple-700">Digest and validation</h2>
           <div className="flex flex-col md:flex-row md:space-x-2">
             <input type="text" value={dig} onChange={(e) => { setDig(e.target.value) }}
               className="my-2 w-full md:w-10/12 py-1 h-8  text-xs rounded border-2 border-purple-700 font-thin  text-purple-400" />
@@ -69,7 +69,7 @@ const Home: NextPage = () => {
         </div>
 
         <div className="mt-2">
-          <h2>Signature and validation</h2>
+          <h2 className="font-thin text-sm text-purple-700">Signature and validation</h2>
           <div className="flex flex-col md:flex-row md:space-x-2">
             <input type="text" value={sig} onChange={(e) => { setSig(e.target.value) }}
               className="my-2 w-full md:w-10/12 py-1 h-8  text-xs rounded border-2 border-purple-700 font-thin  text-purple-400" />
@@ -78,7 +78,7 @@ const Home: NextPage = () => {
         </div>
 
         <div>
-          <h2>Post Content</h2>
+          <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
           <div className=" shadow-inner border-2 rounded border-purple-700 mt-2 ">
             <div className="prose">
               {
