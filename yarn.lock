@@ -121,10 +121,10 @@
   resolved "https://registry.nlark.com/@humanwhocodes/object-schema/download/@humanwhocodes/object-schema-1.2.0.tgz#87de7af9c231826fdd68ac7258f77c429e0e5fcf"
   integrity sha1-h956+cIxgm/daKxyWPd8Qp4OX88=
 
-"@metaio/meta-signature-util@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@metaio/meta-signature-util/-/meta-signature-util-0.0.1.tgz#5ca8cd5462754e27ce3d8ceb312ec0d666df9735"
-  integrity sha512-P4VjMv1l+SDFV3MszLb6+i6Ckjuf6dYTV7pyAfU8avz8fxVQafu4p6H9z5ZTkk4MTVPGjGta+9pe/jxoEjPf1A==
+"@metaio/meta-signature-util@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@metaio/meta-signature-util/-/meta-signature-util-0.1.2.tgz#748d516cde967c8c5a12a0a2d171e58db8539a99"
+  integrity sha512-SvmjpTLXiC073YjxeaVAfI2L8seb/ZkBnouLk5pM6oliELUy1j2SzyXQF6SKcPyRGsAFpsX7adi/JwZiBAp2DQ==
   dependencies:
     curve25519-js "^0.0.4"
     niceware "^2.0.2"
