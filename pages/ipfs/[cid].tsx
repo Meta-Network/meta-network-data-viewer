@@ -8,18 +8,20 @@ import renderHTML from 'react-render-html';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import * as metaSignatureUtil from '@metaio/meta-signature-util'
 
 const Viewer: any = (props) => {
 
-  // param
-  // props.cid
-  // https://ipfs.fleek.co/ipfs/bafybeihfcp2547c2bf5a4mmgo3sdryhz45ga7lmgyz7nvbw36cr2yxbsgq
+  // param props.cid
 
   // stats
   const [cid, setCid] = useState('');
   const [ipfsGateway, setIpfsGateway] = useState('');
   const [dig, setDig] = useState('');
   const [sig, setSig] = useState('');
+  const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
+
+
   const [metaData, setMetaData] = useState<any>({ status: 'fetching...' })
 
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
@@ -27,7 +29,16 @@ const Viewer: any = (props) => {
   const getCidContent = useCallback(async () => {
     try {
       const content = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`, { timeout: 5000 })).data
+      const verifyStatus = metaSignatureUtil.verifyServerMetadataSignature(content);
+      setVerifyServerMetadataSignatureStatus(verifyStatus)
 
+      if (verifyStatus) {
+        //toast.success('')
+        setSig((content.reference.slice(-1)[0].body).signature)
+        
+      } else {
+        toast.warning('Verify server metadata signature failure!')
+      }
       setMetaData(content)
     } catch (error) {
       if (error.message.includes('Network Error')) {
@@ -101,7 +112,19 @@ const Viewer: any = (props) => {
               </div>
             </div>
             <div className="w-full md:w-1/3 my-2">
-              <div className="">
+              <div>
+                <h2 className="font-thin text-sm text-purple-700">Verify server metadata signature</h2>
+                {
+                  verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 bg-green-600 text-white rounded">
+                    Verify server metadata signature success.
+                  </div> : <div className="my-2 p-4 bg-green-600 text-white rounded">
+                    Verify server metadata signature failure.
+                  </div>
+                }
+
+
+              </div>
+              <div>
                 <h2 className="font-thin text-sm text-purple-700">Digest and validation</h2>
                 <div className="flex flex-col">
                   <textarea value={dig} onChange={(e) => { setDig(e.target.value) }}
@@ -120,9 +143,6 @@ const Viewer: any = (props) => {
               </div>
             </div>
           </div>
-
-
-
           <div>
             <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
             <div className=" shadow-inner border-2 rounded border-purple-400 mt-2 ">
