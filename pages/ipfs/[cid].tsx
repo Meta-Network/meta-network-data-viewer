@@ -27,6 +27,7 @@ const Viewer: any = (props) => {
   const getCidContent = useCallback(async () => {
     try {
       const content = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`, { timeout: 5000 })).data
+
       setMetaData(content)
     } catch (error) {
       if (error.message.includes('Network Error')) {
@@ -88,38 +89,38 @@ const Viewer: any = (props) => {
             </div>
 
           </div>
-          <div className="my-2 mt-8">
-            <div className="flex flex-col md:flex-row md:space-x-2">
-              <div className="w-full md:w-2/3 my-2">
-                <h2 className="font-thin text-sm text-purple-700">Origin Metadata</h2>
-                <div className="p-2 border-2 border-purple-400 rounded mt-2 bg-purple-50">
-                  <div className="overflow-auto ">
-                    <DynamicReactJson src={metaData} displayDataTypes={false} defaultValue={{ ok: false }} name={false} />
-                  </div>
 
+          <div className="my-2 mt-8 w-full flex flex-col md:flex-row md:space-x-2">
+            <div className="w-full md:w-2/3 my-2">
+              <h2 className="font-thin text-sm text-purple-700">Origin Metadata</h2>
+              <div className="p-2 border-2 border-purple-400 rounded mt-2 bg-purple-50">
+                <div className="overflow-auto ">
+                  <DynamicReactJson src={metaData} displayDataTypes={false} defaultValue={{ ok: false }} name={false} />
+                </div>
+
+              </div>
+            </div>
+            <div className="w-full md:w-1/3 my-2">
+              <div className="">
+                <h2 className="font-thin text-sm text-purple-700">Digest and validation</h2>
+                <div className="flex flex-col">
+                  <textarea value={dig} onChange={(e) => { setDig(e.target.value) }}
+                    className="p-1 my-2 w-full  py-1 h-16  text-xs rounded border-2 border-purple-400 font-thin  text-purple-400" />
+                  <button className="my-2 w-full  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-500">VALIDATE</button>
                 </div>
               </div>
-              <div className="w-full md:w-1/3 my-2">
-                <div className="">
-                  <h2 className="font-thin text-sm text-purple-700">Digest and validation</h2>
-                  <div className="flex flex-col">
-                    <textarea value={dig} onChange={(e) => { setDig(e.target.value) }}
-                      className="p-1 my-2 w-full  py-1 h-16  text-xs rounded border-2 border-purple-400 font-thin  text-purple-400" />
-                    <button className="my-2 w-full  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-500">VALIDATE</button>
-                  </div>
-                </div>
 
-                <div className="mt-2">
-                  <h2 className="font-thin text-sm text-purple-700">Signature and validation</h2>
-                  <div className="flex flex-col ">
-                    <textarea value={sig} onChange={(e) => { setSig(e.target.value) }}
-                      className="p-1 my-2 w-full  py-1 h-16  text-xs rounded border-2 border-purple-400 font-thin  text-purple-400" />
-                    <button className="my-2 w-full  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-500">VALIDATE</button>
-                  </div>
+              <div className="mt-2">
+                <h2 className="font-thin text-sm text-purple-700">Signature and validation</h2>
+                <div className="flex flex-col ">
+                  <textarea value={sig} onChange={(e) => { setSig(e.target.value) }}
+                    className="p-1 my-2 w-full  py-1 h-16  text-xs rounded border-2 border-purple-400 font-thin  text-purple-400" />
+                  <button className="my-2 w-full  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-500">VALIDATE</button>
                 </div>
               </div>
             </div>
           </div>
+
 
 
           <div>
