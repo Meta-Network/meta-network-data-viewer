@@ -21,13 +21,14 @@ const Home: NextPage = () => {
 
   const getCidContent = useCallback(async () => {
     try {
-      const content = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`, { timeout: 5 })).data
+      const content = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`, { timeout: 5000 })).data
       setMetaData(content)
     } catch (error) {
       if (error.message.includes('Network Error')) {
         toast.error('Please check your internet connection');
       } else {
-        toast.error('Something went wrong, please change IPFS gateway.');
+        console.error(error)
+        toast.error('Something went wrong');
       }
       setMetaData({ status: 'failure.' })
     }
