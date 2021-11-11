@@ -35,7 +35,7 @@ const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadat
         setVerifyStatus(VerifyStatus.Unverified);
         setCustomerMetaData(e.target.value);
       }}
-        className="p-1 my-1 w-full  py-1 h-40  text-xs rounded border-2 border-purple-400 font-thin  text-purple-400" />
+        className="p-1 my-1 w-full  py-1 h-40  text-xs rounded border border-purple-300 font-thin  text-purple-400" />
       <VerifyResult status={verifyStatus} />
       <button onClick={() => {
         try {
