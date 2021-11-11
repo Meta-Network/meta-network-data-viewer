@@ -24,7 +24,7 @@ type TypeReference = {
 }
 
 const Viewer: any = (props) => {
-
+  const propsCid = props.cid;
   const [cid, setCid] = useState('');
   const [ipfsGateway, setIpfsGateway] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
@@ -56,23 +56,20 @@ const Viewer: any = (props) => {
       }
       setMetaData({ status: 'failure.' })
     }
-  }, [cid, ipfsGateway])
+  }, [cid, ipfsGateway]);
 
+  useEffect(() => {
+    if (cid && ipfsGateway) {
+      getCidContent();
+    }
+  }, [cid, ipfsGateway, getCidContent]);
 
+  useEffect(() => {
+    setCid(propsCid);
+    setIpfsGateway('https://ipfs.io/ipfs/:hash');
+  }, [propsCid]);
 
   if (props.ok) {
-
-    useEffect(() => {
-      if (cid && ipfsGateway) {
-        getCidContent()
-      }
-    }, [ipfsGateway])
-
-    useEffect(() => {
-      setCid(props.cid);
-      setIpfsGateway('https://ipfs.io/ipfs/:hash');
-    }, [])
-
     return (
       <div>
         <Head>
@@ -212,7 +209,6 @@ Viewer.getInitialProps = async ({ query }) => {
       ok: true,
       cid
     }
-
   } catch (error) {
     return {
       ok: false,
