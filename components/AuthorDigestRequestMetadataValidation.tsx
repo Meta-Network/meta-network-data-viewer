@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/type/types';
+import { AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/type/types';
 import { verifyDigest } from '@metaio/meta-signature-util';
 import { VerifyStatus } from '../utils/status';
 import VerifyResult from './VerifyResult';
@@ -21,7 +21,7 @@ const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadat
     setVerifyStatus(VerifyStatus.Unverified);
     setDig(metadata.digest);
     setCustomerMetaData(JSON.stringify(metadata));
-  }, [props])
+  }, [metadata]);
 
 
   return <div className="mt-8">

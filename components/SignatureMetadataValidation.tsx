@@ -21,7 +21,7 @@ const SignatureMetadataValidation = (props: SignatureMetadataValidationProps) =>
     setVerifyStatus(VerifyStatus.Unverified);
     setSig(metadata.signature);
     setCustomerMetaData(JSON.stringify(metadata));
-  }, [props])
+  }, [metadata])
 
 
   return <div className="mt-8">
