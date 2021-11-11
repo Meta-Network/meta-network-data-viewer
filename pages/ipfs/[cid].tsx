@@ -8,7 +8,10 @@ import renderHTML from 'react-render-html';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import * as metaSignatureUtil from '@metaio/meta-signature-util'
+import * as metaSignatureUtil from '@metaio/meta-signature-util';
+import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/type/types';
+
+import SignatureMetadataValidation from '../../components/SignatureMetadataValidation';
 
 const Viewer: any = (props) => {
 
@@ -17,10 +20,11 @@ const Viewer: any = (props) => {
   // stats
   const [cid, setCid] = useState('');
   const [ipfsGateway, setIpfsGateway] = useState('');
-  const [dig, setDig] = useState('');
-  const [sig, setSig] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
-
+  const [reference, setReference] = useState<{
+    refer: string;
+    body: SignatureMetadata | AuthorDigestRequestMetadata;
+  }[]>([]);
 
   const [metaData, setMetaData] = useState<any>({ status: 'fetching...' })
 
@@ -28,14 +32,13 @@ const Viewer: any = (props) => {
 
   const getCidContent = useCallback(async () => {
     try {
-      const content = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`, { timeout: 5000 })).data
+      const content: SignatureMetadata = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`, { timeout: 5000 })).data
       const verifyStatus = metaSignatureUtil.verifyServerMetadataSignature(content);
       setVerifyServerMetadataSignatureStatus(verifyStatus)
 
       if (verifyStatus) {
         //toast.success('')
-        setSig((content.reference.slice(-1)[0].body).signature)
-        
+        setReference(content.reference)
       } else {
         toast.warning('Verify server metadata signature failure!')
       }
@@ -117,30 +120,23 @@ const Viewer: any = (props) => {
                 {
                   verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 bg-green-600 text-white rounded">
                     Verify server metadata signature success.
-                  </div> : <div className="my-2 p-4 bg-green-600 text-white rounded">
+                  </div> : <div className="my-2 p-4 bg-red-600 text-white rounded">
                     Verify server metadata signature failure.
                   </div>
                 }
+              </div>
+              <div className="break-all">
+                {
+                  (verifyServerMetadataSignatureStatus && reference) ? <>
+                    {
+                      reference.map(i => <div>{i.refer} {JSON.stringify(i.body)}</div>)
+                    }
+                  </> : <></>
+                }
+              </div>
 
 
-              </div>
-              <div>
-                <h2 className="font-thin text-sm text-purple-700">Digest and validation</h2>
-                <div className="flex flex-col">
-                  <textarea value={dig} onChange={(e) => { setDig(e.target.value) }}
-                    className="p-1 my-2 w-full  py-1 h-16  text-xs rounded border-2 border-purple-400 font-thin  text-purple-400" />
-                  <button className="my-2 w-full  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-500">VALIDATE</button>
-                </div>
-              </div>
 
-              <div className="mt-2">
-                <h2 className="font-thin text-sm text-purple-700">Signature and validation</h2>
-                <div className="flex flex-col ">
-                  <textarea value={sig} onChange={(e) => { setSig(e.target.value) }}
-                    className="p-1 my-2 w-full  py-1 h-16  text-xs rounded border-2 border-purple-400 font-thin  text-purple-400" />
-                  <button className="my-2 w-full  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-500">VALIDATE</button>
-                </div>
-              </div>
             </div>
           </div>
           <div>
