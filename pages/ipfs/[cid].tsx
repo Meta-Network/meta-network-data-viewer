@@ -12,10 +12,15 @@ import * as metaSignatureUtil from '@metaio/meta-signature-util';
 import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/type/types';
 
 import SignatureMetadataValidation from '../../components/SignatureMetadataValidation';
-
+import AuthorDigestRequestMetadataValidation from '../../components/AuthorDigestRequestMetadataValidation';
 interface IReference {
   refer: string;
   body: SignatureMetadata & AuthorDigestRequestMetadata;
+}
+
+type TypeReference = {
+  refer: string;
+  body: SignatureMetadata | AuthorDigestRequestMetadata;
 }
 
 const Viewer: any = (props) => {
@@ -23,7 +28,8 @@ const Viewer: any = (props) => {
   const [cid, setCid] = useState('');
   const [ipfsGateway, setIpfsGateway] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
-  const [reference, setReference] = useState<any[]>([]);
+  const [reference, setReference] = useState<TypeReference[]>([]);
+  // const [contents, setContents] = useState<AuthorDigestRequestMetadata[]>([]);
   const [metaData, setMetaData] = useState<any>({ status: 'fetching...' })
 
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
@@ -135,8 +141,9 @@ const Viewer: any = (props) => {
                             <SignatureMetadataValidation metadata={body} refer={refer} />
                           </div>
                         } else if (body.digest && body.digest.length > 0) {
+
                           return <div key={index}>
-                            {/* <SignatureMetadataValidation metadata={body} /> */}
+                            <AuthorDigestRequestMetadataValidation metadata={body} refer={refer} />
                           </div>
                         } else {
                           return <div key={index}></div>
@@ -153,14 +160,33 @@ const Viewer: any = (props) => {
           </div>
           <div>
             <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
-            <div className=" shadow-inner border-2 rounded border-purple-400 mt-2 ">
-              <div className="prose">
-                {
-                  renderHTML(md.render('> markdown-it rulezz! '))
-                }
-              </div>
 
-            </div>
+
+            {
+              (verifyServerMetadataSignatureStatus && reference) ? <>
+                {
+                  reference.map((item: IReference, index) => {
+                    const { body, refer } = item;
+                    if (body.title && body.content) {
+                      return <div key={index}>
+                        <div className=" shadow-inner border-2 rounded border-purple-400 mt-2 p-4">
+                          <h2 className="my-2 text-2xl">{body.title}</h2>
+                          <div className="prose">
+                            {
+                              renderHTML(md.render(body.content))
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    } else {
+                      return <div key={index}></div>
+                    }
+                  })
+                }
+              </> : <></>
+            }
+
+
           </div>
         </main>
 
