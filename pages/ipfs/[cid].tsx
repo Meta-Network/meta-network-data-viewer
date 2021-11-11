@@ -13,19 +13,17 @@ import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-sig
 
 import SignatureMetadataValidation from '../../components/SignatureMetadataValidation';
 
+interface IReference {
+  refer: string;
+  body: SignatureMetadata & AuthorDigestRequestMetadata;
+}
+
 const Viewer: any = (props) => {
 
-  // param props.cid
-
-  // stats
   const [cid, setCid] = useState('');
   const [ipfsGateway, setIpfsGateway] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
-  const [reference, setReference] = useState<{
-    refer: string;
-    body: SignatureMetadata | AuthorDigestRequestMetadata;
-  }[]>([]);
-
+  const [reference, setReference] = useState<any[]>([]);
   const [metaData, setMetaData] = useState<any>({ status: 'fetching...' })
 
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
@@ -85,7 +83,7 @@ const Viewer: any = (props) => {
 
           <div className="w-full  flex flex-col md:flex-row md:space-x-2 ">
             <div className="w-full md:w-2/3 my-2">
-              <h2 className="font-thin text-sm text-purple-700">CID</h2>
+              <h2 className="font-thin text-2xl text-purple-700">CID</h2>
               <input type="text"
                 value={cid}
                 onChange={(e) => setCid(e.target.value)}
@@ -93,7 +91,7 @@ const Viewer: any = (props) => {
                 className="w-full font-thin text-xs text-purple-700 bg-purple-100 p-2 rounded border-2 border-purple-400 placeholder-purple-200 h-10 " placeholder="Please input IPFS CID" />
             </div>
             <div className="w-full md:w-1/3 my-2">
-              <h2 className="font-thin text-sm text-purple-700">Select IPFS gateway.</h2>
+              <h2 className="font-thin text-2xl text-purple-700">Select IPFS gateway.</h2>
               <select value={ipfsGateway} onChange={(e) => { setIpfsGateway(e.target.value) }}
                 className="w-full font-thin p-2 rounded border-2 text-purple-700 border-purple-400 placeholder-purple-200 h-10">
                 {ipfsGatewayList.map((item: string, index) => {
@@ -106,7 +104,7 @@ const Viewer: any = (props) => {
 
           <div className="my-2 mt-8 w-full flex flex-col md:flex-row md:space-x-2">
             <div className="w-full md:w-2/3 my-2">
-              <h2 className="font-thin text-sm text-purple-700">Origin Metadata</h2>
+              <h2 className="font-thin text-2xl text-purple-700">Origin Metadata</h2>
               <div className="p-2 border-2 border-purple-400 rounded mt-2 bg-purple-50">
                 <div className="overflow-auto ">
                   <DynamicReactJson src={metaData} displayDataTypes={false} defaultValue={{ ok: false }} name={false} />
@@ -116,7 +114,7 @@ const Viewer: any = (props) => {
             </div>
             <div className="w-full md:w-1/3 my-2">
               <div>
-                <h2 className="font-thin text-sm text-purple-700">Verify server metadata signature</h2>
+                <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
                 {
                   verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 bg-green-600 text-white rounded">
                     Verify server metadata signature success.
@@ -129,7 +127,21 @@ const Viewer: any = (props) => {
                 {
                   (verifyServerMetadataSignatureStatus && reference) ? <>
                     {
-                      reference.map(i => <div>{i.refer} {JSON.stringify(i.body)}</div>)
+                      reference.map((item: IReference, index) => {
+                        const { body, refer } = item;
+                        if (body.signature && body.signature.length > 0) {
+                          return <div key={index}>
+
+                            <SignatureMetadataValidation metadata={body} refer={refer} />
+                          </div>
+                        } else if (body.digest && body.digest.length > 0) {
+                          return <div key={index}>
+                            {/* <SignatureMetadataValidation metadata={body} /> */}
+                          </div>
+                        } else {
+                          return <div key={index}></div>
+                        }
+                      })
                     }
                   </> : <></>
                 }
