@@ -3,6 +3,7 @@ import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-sig
 import { verifyDigest } from '@metaio/meta-signature-util';
 import { VerifyStatus } from '../utils/status';
 import VerifyResult from './VerifyResult';
+import ShowItem from './ShowItem';
 
 type AuthorDigestRequestMetadataValidatioProps = {
   metadata: AuthorDigestRequestMetadata
@@ -21,30 +22,12 @@ const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadat
     setCustomerMetaData(JSON.stringify(metadata));
   }, [])
 
-  type itemProps = {
-    title: string,
-    content: string
-  }
-
-  const FormItem = (props: itemProps) => {
-    const { title, content } = props;
-    return <div className="mt-2">
-      <p className="font-thin text-sm text-purple-700">{title}</p>
-      <p className="p-1 my-1  font-thin text-xs bg-purple-100 rounded text-purple-700">{content}</p>
-    </div>
-  }
 
   return <div className="mt-8">
     <h2 className="font-thin text-2xl text-purple-700">Digest and validation</h2>
-    {
-      refer ? <FormItem title="Refer:" content={refer} /> : <></>
-    }
-    {
-      dig ? <FormItem title="Digest:" content={dig} /> : <></>
-    }
-    {
-      metadata.title ? <FormItem title="Title:" content={metadata.title} /> : <></>
-    }
+    {refer ? <ShowItem title="Refer:" content={refer} /> : <></>}
+    {dig ? <ShowItem title="Digest:" content={dig} /> : <></>}
+    {metadata.title ? <ShowItem title="Title:" content={metadata.title} /> : <></>}
     <div className="flex flex-col mt-2">
       <p className="font-thin text-sm text-purple-700">Body:</p>
       <textarea value={customerMetaData} onChange={(e) => {
