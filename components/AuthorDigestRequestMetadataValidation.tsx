@@ -18,9 +18,10 @@ const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadat
   const [customerMetaData, setCustomerMetaData] = useState<string>('');
 
   useEffect(() => {
+    setVerifyStatus(VerifyStatus.Unverified);
     setDig(metadata.digest);
     setCustomerMetaData(JSON.stringify(metadata));
-  }, [])
+  }, [props])
 
 
   return <div className="mt-8">
@@ -43,7 +44,7 @@ const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadat
         } catch (error) {
           setVerifyStatus(VerifyStatus.VerificationFailed)
         }
-      }} className="my-1 w-full  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-500">VALIDATE</button>
+      }} className="my-1 w-full  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-400">VALIDATE</button>
     </div>
   </div>
 }

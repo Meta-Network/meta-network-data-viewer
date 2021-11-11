@@ -122,9 +122,9 @@ const Viewer: any = (props) => {
               <div>
                 <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
                 {
-                  verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 bg-green-600 text-white rounded">
+                  verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
                     Verify server metadata signature success.
-                  </div> : <div className="my-2 p-4 bg-red-600 text-white rounded">
+                  </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
                     Verify server metadata signature failure.
                   </div>
                 }

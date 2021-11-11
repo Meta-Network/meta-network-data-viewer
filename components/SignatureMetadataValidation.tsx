@@ -13,15 +13,15 @@ type SignatureMetadataValidationProps = {
 const SignatureMetadataValidation = (props: SignatureMetadataValidationProps) => {
 
   const { metadata, refer } = props;
-
   const [sig, setSig] = useState<string>('');
   const [verifyStatus, setVerifyStatus] = useState<VerifyStatus>(VerifyStatus.Unverified);
   const [customerMetaData, setCustomerMetaData] = useState<string>('');
 
   useEffect(() => {
+    setVerifyStatus(VerifyStatus.Unverified);
     setSig(metadata.signature);
     setCustomerMetaData(JSON.stringify(metadata));
-  }, [])
+  }, [props])
 
 
   return <div className="mt-8">
@@ -47,7 +47,7 @@ const SignatureMetadataValidation = (props: SignatureMetadataValidationProps) =>
         } catch (error) {
           setVerifyStatus(VerifyStatus.VerificationFailed)
         }
-      }} className=" w-full my-1  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-500">VALIDATE</button>
+      }} className=" w-full my-1  px-4 text-xs h-10 rounded bg-purple-500 font-thin text-white hover:bg-purple-400">VALIDATE</button>
     </div>
   </div>
 }
