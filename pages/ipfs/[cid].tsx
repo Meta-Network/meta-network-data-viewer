@@ -66,7 +66,7 @@ const Viewer: any = (props) => {
 
   useEffect(() => {
     setCid(propsCid);
-    setIpfsGateway('https://ipfs.io/ipfs/:hash');
+    setIpfsGateway('https://ipfs.fleek.co/ipfs/:hash');
   }, [propsCid]);
 
   if (props.ok) {
