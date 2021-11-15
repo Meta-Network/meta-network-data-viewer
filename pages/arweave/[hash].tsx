@@ -89,7 +89,7 @@ const Viewer: any = (props) => {
         <main className="mx-auto max-w-6xl p-4">
           <div className="w-full  flex flex-col md:flex-row md:space-x-2 ">
             <div className="w-full md:w-2/3 my-2">
-              <h2 className="font-thin text-2xl text-purple-700">CID</h2>
+              <h2 className="font-thin text-2xl text-purple-700">ID</h2>
               <input type="text"
                 value={hash}
                 onChange={(e) => setHash(e.target.value)}
