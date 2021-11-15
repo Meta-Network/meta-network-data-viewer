@@ -2,7 +2,7 @@ import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-sig
 
 import SignatureMetadataValidation from './SignatureMetadataValidation';
 import AuthorDigestRequestMetadataValidation from './AuthorDigestRequestMetadataValidation';
-
+import AuthorPublishMetaSpaceRequestMetadataSignatureValidation from './AuthorPublishMetaSpaceRequestMetadataSignatureValidation';
 interface ICustomerValidations {
   metadata: SignatureMetadata
 }
@@ -16,14 +16,18 @@ const CustomerValidations = (props: ICustomerValidations) => {
 
   const { metadata } = props;
 
-  return <> <>
+  return <>
     {
       metadata.reference.map((item: IReference, index) => {
         const { body, refer } = item;
-        if (body.signature && body.signature.length > 0) {
+        if (metadata.type != 'author-publish-meta-space-server-verification-sign' && body.signature && body.signature.length > 0) {
           return <div key={index}>
 
             <SignatureMetadataValidation metadata={body} refer={refer} />
+          </div>
+        } else if (metadata.type === 'author-publish-meta-space-server-verification-sign' && body.signature && body.signature.length > 0) {
+          return <div key={index}>
+            <AuthorPublishMetaSpaceRequestMetadataSignatureValidation metadata={body} refer={refer} />
           </div>
         } else if (body.digest && body.digest.length > 0) {
 
@@ -35,8 +39,6 @@ const CustomerValidations = (props: ICustomerValidations) => {
         }
       })
     }
-
-  </>
   </>;
 }
 
