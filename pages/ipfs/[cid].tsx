@@ -11,16 +11,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as metaSignatureUtil from '@metaio/meta-signature-util';
 import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/type/types';
 
-import SignatureMetadataValidation from '../../components/SignatureMetadataValidation';
-import AuthorDigestRequestMetadataValidation from '../../components/AuthorDigestRequestMetadataValidation';
+import CustomerValidations from '../../components/CustomerValidations';
 interface IReference {
   refer: string;
   body: SignatureMetadata & AuthorDigestRequestMetadata;
-}
-
-type TypeReference = {
-  refer: string;
-  body: SignatureMetadata | AuthorDigestRequestMetadata;
 }
 
 const Viewer: any = (props) => {
@@ -28,8 +22,8 @@ const Viewer: any = (props) => {
   const [cid, setCid] = useState('');
   const [ipfsGateway, setIpfsGateway] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
-  const [reference, setReference] = useState<TypeReference[]>([]);
-  const [metaData, setMetaData] = useState<any>({ status: 'fetching...' })
+
+  const [metaData, setMetaData] = useState<SignatureMetadata>({ status: 'fetching...' } as any);
 
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
@@ -41,11 +35,11 @@ const Viewer: any = (props) => {
 
       if (verifyStatus) {
         //toast.success('')
-        setReference(content.reference)
+        setMetaData(content)
       } else {
         toast.warning('Verify server metadata signature failure!')
       }
-      setMetaData(content)
+
     } catch (error) {
       if (error.message.includes('Network Error')) {
         toast.error('Please check your internet connection');
@@ -53,7 +47,7 @@ const Viewer: any = (props) => {
         console.error(error)
         toast.error('Something went wrong');
       }
-      setMetaData({ status: 'failure.' })
+      setMetaData({ status: 'failure.' } as any)
     }
   }, [cid, ipfsGateway]);
 
@@ -114,36 +108,23 @@ const Viewer: any = (props) => {
             </div>
             <div className="w-full md:w-1/3 my-2">
               <div>
-                <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
                 {
-                  verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
-                    Verify server metadata signature success.
-                  </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
-                    Verify server metadata signature failure.
+                  (metaData as any).status == 'fetching...' ? <></> : <div>
+                    <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
+                    {
+                      verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
+                        Verify server metadata signature success.
+                      </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
+                        Verify server metadata signature failure.
+                      </div>
+                    }
                   </div>
                 }
               </div>
               <div className="break-all">
                 {
-                  (verifyServerMetadataSignatureStatus && reference) ? <>
-                    {
-                      reference.map((item: IReference, index) => {
-                        const { body, refer } = item;
-                        if (body.signature && body.signature.length > 0) {
-                          return <div key={index}>
-
-                            <SignatureMetadataValidation metadata={body} refer={refer} />
-                          </div>
-                        } else if (body.digest && body.digest.length > 0) {
-
-                          return <div key={index}>
-                            <AuthorDigestRequestMetadataValidation metadata={body} refer={refer} />
-                          </div>
-                        } else {
-                          return <div key={index}></div>
-                        }
-                      })
-                    }
+                  (verifyServerMetadataSignatureStatus && metaData.reference) ? <>
+                    <CustomerValidations metadata={metaData} />
                   </> : <></>
                 }
               </div>
@@ -152,9 +133,9 @@ const Viewer: any = (props) => {
           <div>
             <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
             {
-              (verifyServerMetadataSignatureStatus && reference) ? <>
+              (verifyServerMetadataSignatureStatus && metaData.reference) ? <>
                 {
-                  reference.map((item: IReference, index) => {
+                  metaData.reference.map((item: IReference, index) => {
                     const { body, refer } = item;
                     if (body.title && body.content) {
                       return <div key={index}>

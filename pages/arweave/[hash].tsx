@@ -11,9 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as metaSignatureUtil from '@metaio/meta-signature-util';
 import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/type/types';
 
-import SignatureMetadataValidation from '../../components/SignatureMetadataValidation';
-import AuthorDigestRequestMetadataValidation from '../../components/AuthorDigestRequestMetadataValidation';
-
+import CustomerValidations from '../../components/CustomerValidations';
 interface IReference {
   refer: string;
   body: SignatureMetadata & AuthorDigestRequestMetadata;
@@ -131,25 +129,8 @@ const Viewer: any = (props) => {
               }
               <div className="break-all">
                 {
-                  (verifyServerMetadataSignatureStatus && reference) ? <>
-                    {
-                      reference.map((item: IReference, index) => {
-                        const { body, refer } = item;
-                        if (body.signature && body.signature.length > 0) {
-                          return <div key={index}>
-
-                            <SignatureMetadataValidation metadata={body} refer={refer} />
-                          </div>
-                        } else if (body.digest && body.digest.length > 0) {
-
-                          return <div key={index}>
-                            <AuthorDigestRequestMetadataValidation metadata={body} refer={refer} />
-                          </div>
-                        } else {
-                          return <div key={index}></div>
-                        }
-                      })
-                    }
+                  (verifyServerMetadataSignatureStatus && metaData.reference) ? <>
+                    <CustomerValidations metadata={metaData} />
                   </> : <></>
                 }
               </div>
