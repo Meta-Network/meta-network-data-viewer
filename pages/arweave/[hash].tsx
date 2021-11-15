@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 const md = require('markdown-it')();
-import ipfsGatewayList from '../../ipfs-gateway.json'
+import arweaveNodeList from '../../arweave-node.json'
 import renderHTML from 'react-render-html';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,6 +13,7 @@ import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-sig
 
 import SignatureMetadataValidation from '../../components/SignatureMetadataValidation';
 import AuthorDigestRequestMetadataValidation from '../../components/AuthorDigestRequestMetadataValidation';
+
 interface IReference {
   refer: string;
   body: SignatureMetadata & AuthorDigestRequestMetadata;
@@ -24,18 +25,21 @@ type TypeReference = {
 }
 
 const Viewer: any = (props) => {
-  const propsCid = props.cid;
-  const [cid, setCid] = useState('');
-  const [ipfsGateway, setIpfsGateway] = useState('');
+
+  const propsHash = props.hash;
+
+  const [hash, setHash] = useState('');
+  const [arweaveNode, setArweaveNode] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
   const [reference, setReference] = useState<TypeReference[]>([]);
   const [metaData, setMetaData] = useState<any>({ status: 'fetching...' })
 
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
-  const getCidContent = useCallback(async () => {
+  const getContent = useCallback(async () => {
     try {
-      const content: SignatureMetadata = await (await axios.get(`${ipfsGateway.replace(':hash', cid)}`, { timeout: 5000 })).data
+      const content: SignatureMetadata = await (await axios.get(`${arweaveNode.replace(':hash', hash)}`, { timeout: 5000 })).data
+
       const verifyStatus = metaSignatureUtil.verifyServerMetadataSignature(content);
       setVerifyServerMetadataSignatureStatus(verifyStatus)
 
@@ -55,18 +59,18 @@ const Viewer: any = (props) => {
       }
       setMetaData({ status: 'failure.' })
     }
-  }, [cid, ipfsGateway]);
+  }, [hash, arweaveNode]);
 
   useEffect(() => {
-    if (cid && ipfsGateway) {
-      getCidContent();
+    if (hash && arweaveNode) {
+      getContent();
     }
-  }, [cid, ipfsGateway, getCidContent]);
+  }, [hash, arweaveNode, getContent]);
 
   useEffect(() => {
-    setCid(propsCid);
-    setIpfsGateway('https://ipfs.fleek.co/ipfs/:hash');
-  }, [propsCid]);
+    setHash(propsHash);
+    setArweaveNode('https://arweave.net/:hash');
+  }, [hash]);
 
   if (props.ok) {
     return (
@@ -87,16 +91,16 @@ const Viewer: any = (props) => {
             <div className="w-full md:w-2/3 my-2">
               <h2 className="font-thin text-2xl text-purple-700">CID</h2>
               <input type="text"
-                value={cid}
-                onChange={(e) => setCid(e.target.value)}
+                value={hash}
+                onChange={(e) => setHash(e.target.value)}
                 disabled={true}
-                className="w-full font-thin text-xs text-purple-700 bg-purple-100 p-2 rounded border border-purple-300 placeholder-purple-200 h-10 " placeholder="Please input IPFS CID" />
+                className="w-full font-thin text-xs text-purple-700 bg-purple-100 p-2 rounded border border-purple-300 placeholder-purple-200 h-10 " placeholder="Please input Arweave txID" />
             </div>
             <div className="w-full md:w-1/3 my-2">
-              <h2 className="font-thin text-2xl text-purple-700">Select IPFS gateway.</h2>
-              <select value={ipfsGateway} onChange={(e) => { setIpfsGateway(e.target.value) }}
+              <h2 className="font-thin text-2xl text-purple-700">Select Arweave node server.</h2>
+              <select value={arweaveNode} onChange={(e) => { setArweaveNode(e.target.value) }}
                 className="w-full font-thin p-2 rounded border text-purple-700 border-purple-300 placeholder-purple-200 h-10">
-                {ipfsGatewayList.map((item: string, index) => {
+                {arweaveNodeList.map((item: string, index) => {
                   return <option key={index} value={item}>{item.replace(':hash', '')}</option>
                 })}
               </select>
@@ -113,16 +117,18 @@ const Viewer: any = (props) => {
               </div>
             </div>
             <div className="w-full md:w-1/3 my-2">
-              <div>
-                <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
-                {
-                  verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
-                    Verify server metadata signature success.
-                  </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
-                    Verify server metadata signature failure.
-                  </div>
-                }
-              </div>
+              {
+                metaData.status == 'fetching...' ? <></> : <div>
+                  <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
+                  {
+                    verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
+                      Verify server metadata signature success.
+                    </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
+                      Verify server metadata signature failure.
+                    </div>
+                  }
+                </div>
+              }
               <div className="break-all">
                 {
                   (verifyServerMetadataSignatureStatus && reference) ? <>
@@ -179,24 +185,24 @@ const Viewer: any = (props) => {
       </div>
     )
   } else {
-    return <> CID ERROR</>
+    return <> HASH ERROR</>
   }
 
 }
 
 Viewer.getInitialProps = async ({ query }) => {
 
-  const { cid } = query;
+  const { hash } = query;
 
   try {
     return {
       ok: true,
-      cid
+      hash
     }
   } catch (error) {
     return {
       ok: false,
-      cid,
+      hash,
       msg: ''
     }
   }
