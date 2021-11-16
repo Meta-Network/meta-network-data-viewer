@@ -123,9 +123,9 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
         </div>
       </div>
       <div>
-        <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
         {
           (verifyServerMetadataSignatureStatus && (metadata as SignatureMetadata).reference) ? <>
+            <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
             {
               (metadata as SignatureMetadata).reference.map((item: IReference, index) => {
                 const { body, refer } = item;
@@ -141,7 +141,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
                     </div>
                   </div>
                 } else {
-                  return <div key={index}></div>
+                  return <div key={index} className="font-thin text-xs text-purple-700">no view content</div>
                 }
               })
             }
