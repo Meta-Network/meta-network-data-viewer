@@ -22,7 +22,6 @@ const CustomerValidations = (props: ICustomerValidations) => {
         const { body, refer } = item;
         if (metadata.type != 'author-publish-meta-space-server-verification-sign' && body.signature && body.signature.length > 0) {
           return <div key={index}>
-
             <SignatureMetadataValidation metadata={body} refer={refer} />
           </div>
         } else if (metadata.type === 'author-publish-meta-space-server-verification-sign' && body.signature && body.signature.length > 0) {
