@@ -2,7 +2,7 @@ import Head from 'next/head';
 import ipfsGatewayList from '../../ipfs-gateway.json';
 import DataViewer from '../../components/DataViewer';
 
-const Viewer: any = (props) => (props.ok) ? (
+const IPFSViewer: any = (props: { cid: string, ok: boolean }) => (props.ok) ? (
   <div>
     <Head>
       <title>meta-network-data-viewer</title>
@@ -27,6 +27,6 @@ const Viewer: any = (props) => (props.ok) ? (
   </div>
 ) : <>CID ERROR</>
 
-Viewer.getInitialProps = async ({ query }) => query.cid ? { cid: query.cid, ok: true } : { cid: '', ok: false }
+IPFSViewer.getInitialProps = async ({ query }) => query.cid ? { cid: query.cid, ok: true } : { cid: '', ok: false }
 
-export default Viewer;
+export default IPFSViewer;

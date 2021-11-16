@@ -37,7 +37,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const [dataSource, setDataSource] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
   const [metadata, setMetadata] = useState<TMetadataType | SignatureMetadata>({ status: 'fetching...' } as any);
-
+  const [contentViewNum, setContentViewNum] = useState(0);
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
   const getMetadata = useCallback(async () => {
@@ -128,7 +128,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
             <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
             {
               (metadata as SignatureMetadata).reference.map((item: IReference, index) => {
-                const { body, refer } = item;
+                const { body } = item;
                 if (body.title && body.content) {
                   return <div key={index}>
                     <div className=" shadow-inner border rounded border-purple-300 mt-2 p-4">
@@ -141,7 +141,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
                     </div>
                   </div>
                 } else {
-                  return <div key={index} className="font-thin text-xs text-purple-700">no view content</div>
+                  return <div key={index} className="font-thin text-xs text-purple-700"></div>
                 }
               })
             }
