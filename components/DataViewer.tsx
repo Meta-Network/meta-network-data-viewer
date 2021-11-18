@@ -8,6 +8,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { verifyServerMetadataSignature } from '@metaio/meta-signature-util';
 import CustomerValidations from './CustomerValidations';
+import { getArweaveTxnStatusByHash } from '../services/arweave';
+import ShowItem from './ShowItem';
 
 const md = require('markdown-it')();
 
@@ -37,7 +39,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const [dataSource, setDataSource] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
   const [metadata, setMetadata] = useState<TMetadataType | SignatureMetadata>({ status: 'fetching...' } as any);
-  const [contentViewNum, setContentViewNum] = useState(0);
+  const [blockNumber, setBlockNumber] = useState<Number>(null);
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
   const getMetadata = useCallback(async () => {
@@ -57,6 +59,11 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     }
   }, [id, dataSource, options]);
 
+  const getArweaveTxnStatus = useCallback(async () => {
+    const result = await getArweaveTxnStatusByHash(options.id);
+    setBlockNumber(result.block_height);
+  }, []);
+
   useEffect(() => {
     (id && dataSource) ? getMetadata() : null;
   }, [id, dataSource, getMetadata]);
@@ -64,7 +71,12 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   useEffect(() => {
     setId(options.id);
     setDataSource((options.defaultDataSource) || options.dataSourceList[0]);
-  }, [options.id, options.defaultDataSource, options.dataSourceList]);
+
+    if (options.platform === 'arweave') {
+      getArweaveTxnStatus();
+    }
+
+  }, [options]);
 
   return <>
     <ToastContainer />
@@ -101,16 +113,27 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
         <div className="w-full md:w-1/3 my-2">
           <div>
             {
-              (metadata as any).status == 'fetching...' ? <></> : <div> { /* init */}
-                <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
-                {
-                  verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
-                    Verify server metadata signature success.
-                  </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
-                    Verify server metadata signature failure.
-                  </div>
-                }
-              </div>
+              (metadata as any).status == 'fetching...' ? <></> :
+                <div> { /* init */}
+                  <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
+                  {
+                    verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
+                      Verify server metadata signature success.
+                    </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
+                      Verify server metadata signature failure.
+                    </div>
+                  }
+                </div>
+            }
+            {
+              options.platform == 'arweave' && blockNumber > 0 ? <div className="mt-8">
+                <h2 className="font-thin text-2xl text-purple-700">Arweave</h2>
+                <ShowItem
+                  title="Arweave block"
+                  content={blockNumber.toString()}
+                  url={`https://viewblock.io/arweave/block/${blockNumber}`}
+                  urlTitle="viewblock.io"
+                /></div> : <></>
             }
           </div>
           <div className="break-all">
