@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { verifyServerMetadataSignature } from '@metaio/meta-signature-util';
 import CustomerValidations from './CustomerValidations';
-import { getArweaveTxnStatusByHash } from '../services/arweave';
+import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/arweave';
 import ShowItem from './ShowItem';
 
 const md = require('markdown-it')();
@@ -40,6 +40,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
   const [metadata, setMetadata] = useState<TMetadataType | SignatureMetadata>({ status: 'fetching...' } as any);
   const [blockNumber, setBlockNumber] = useState<Number>(null);
+  const [blockTimestamp, setBlockTimestamp] = useState<number>(0);
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
   const getMetadata = useCallback(async () => {
@@ -60,9 +61,11 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   }, [id, dataSource, options]);
 
   const getArweaveTxnStatus = useCallback(async () => {
-    const result = await getArweaveTxnStatusByHash(options.id);
-    setBlockNumber(result.block_height);
-  }, []);
+    const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
+    const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
+    setBlockNumber(block_height);
+    setBlockTimestamp(timestamp * 1000);
+  }, [setBlockNumber, setBlockTimestamp]);
 
   useEffect(() => {
     (id && dataSource) ? getMetadata() : null;
@@ -129,11 +132,16 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
               options.platform == 'arweave' && blockNumber > 0 ? <div className="mt-8">
                 <h2 className="font-thin text-2xl text-purple-700">Arweave</h2>
                 <ShowItem
-                  title="Arweave block"
+                  title="Block"
                   content={blockNumber.toString()}
                   url={`https://viewblock.io/arweave/block/${blockNumber}`}
                   urlTitle="viewblock.io"
-                /></div> : <></>
+                />
+                <ShowItem
+                  title="Timestamp"
+                  content={new Date(blockTimestamp).toLocaleString()}
+                />
+                </div> : <></>
             }
           </div>
           <div className="break-all">
