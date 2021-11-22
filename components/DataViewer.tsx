@@ -11,7 +11,7 @@ import CustomerValidations from './CustomerValidations';
 import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/arweave';
 import ShowItem from './ShowItem';
 
-const md = require('markdown-it')();
+const md = require('markdown-it')().use(require('markdown-it-plantuml'));
 
 interface IDataViewerProps {
   options: {
@@ -81,6 +81,8 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   }, [options]);
 
+  // const renderData = (content: string) => content.replaceAll('```plantuml\n@startuml', '\n@startuml').replaceAll('@enduml\n```', '@enduml\n');
+
   return <>
     <ToastContainer />
     <main className="mx-auto max-w-6xl p-4">
@@ -141,7 +143,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
                   title="Timestamp"
                   content={new Date(blockTimestamp).toLocaleString()}
                 />
-                </div> : <></>
+              </div> : <></>
             }
           </div>
           <div className="break-all">
@@ -166,7 +168,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
                       <h2 className="my-2 text-2xl">{body.title}</h2>
                       <div className="prose">
                         {
-                          renderHTML(md.render(body.content))
+                          renderHTML(md.render((body.content)))
                         }
                       </div>
                     </div>
