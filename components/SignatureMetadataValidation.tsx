@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { SignatureMetadata, AuthorSignatureMetadata } from '@metaio/meta-signature-util/type/types';
-import { verifyAuthorDigestMetadataSignature } from '@metaio/meta-signature-util';
+import { SignatureMetadata, AuthorSignatureMetadata } from '@metaio/meta-signature-util/lib/type/types';
+import { authorDigestSign } from '@metaio/meta-signature-util';
 import { VerifyStatus } from '../utils/status';
 import VerifyResult from './VerifyResult';
 import ShowItem from './ShowItem';
@@ -42,7 +42,7 @@ const SignatureMetadataValidation = (props: SignatureMetadataValidationProps) =>
       <VerifyResult status={verifyStatus} />
       <button onClick={() => {
         try {
-          const result = verifyAuthorDigestMetadataSignature(JSON.parse(customerMetaData));
+          const result = authorDigestSign.verify(JSON.parse(customerMetaData));
           result ? setVerifyStatus(VerifyStatus.Verified) : setVerifyStatus(VerifyStatus.VerificationFailed)
         } catch (error) {
           setVerifyStatus(VerifyStatus.VerificationFailed)

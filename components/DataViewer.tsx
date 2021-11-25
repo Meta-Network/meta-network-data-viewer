@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { MetadataPlatform, PlatformIdName, PlatformSourceName } from '../utils/types';
-import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/type/types';
+import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/lib/type/types';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
 import renderHTML from 'react-render-html';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { verifyServerMetadataSignature } from '@metaio/meta-signature-util';
+import { serverVerificationSign, serverVerificationSignWithContent } from '@metaio/meta-signature-util';
 import CustomerValidations from './CustomerValidations';
 import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/arweave';
 import ShowItem from './ShowItem';
@@ -28,6 +28,7 @@ interface IDataViewerProps {
 
 interface IReference {
   refer: string;
+  rel: string;
   body: SignatureMetadata & AuthorDigestRequestMetadata;
 }
 
@@ -46,7 +47,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const getMetadata = useCallback(async () => {
     try {
       const content: TMetadataType = await (await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 5000 })).data;
-      const verifyStatus = verifyServerMetadataSignature(content as any);
+      const verifyStatus = serverVerificationSignWithContent.verify(content as any);
       setVerifyServerMetadataSignatureStatus(verifyStatus);
       verifyStatus ? setMetadata(content) : toast.warning('Verify server metadata signature failure!');
     } catch (error) {

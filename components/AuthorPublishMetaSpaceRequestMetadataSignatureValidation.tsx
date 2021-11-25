@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/type/types';
-import { verifyAuthorPublishMetaSpaceRequestMetadataSignature } from '@metaio/meta-signature-util';
+import { AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/lib/type/types';
+import { authorPublishMetaSpaceRequest } from '@metaio/meta-signature-util';
 import { VerifyStatus } from '../utils/status';
 import VerifyResult from './VerifyResult';
 import ShowItem from './ShowItem';
@@ -37,7 +37,7 @@ const AuthorPublishMetaSpaceRequestMetadataSignatureValidation = (props: AuthorP
       <VerifyResult status={verifyStatus} />
       <button onClick={() => {
         try {
-          const result = verifyAuthorPublishMetaSpaceRequestMetadataSignature(JSON.parse(customerMetaData));
+          const result = authorPublishMetaSpaceRequest.verify(JSON.parse(customerMetaData));
           result ? setVerifyStatus(VerifyStatus.Verified) : setVerifyStatus(VerifyStatus.VerificationFailed)
         } catch (error) {
           setVerifyStatus(VerifyStatus.VerificationFailed)
