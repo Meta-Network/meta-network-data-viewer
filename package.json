@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@metaio/meta-signature-util": "0.2.0",
+    "@metaio/meta-signature-util": "^0.3.1",
     "@tailwindcss/typography": "^0.4.1",
     "axios": "^0.24.0",
     "html-react": "^0.0.18",

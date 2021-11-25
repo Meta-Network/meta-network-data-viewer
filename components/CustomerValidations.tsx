@@ -1,4 +1,4 @@
-import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/type/types';
+import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/lib/type/types';
 
 import SignatureMetadataValidation from './SignatureMetadataValidation';
 import AuthorDigestRequestMetadataValidation from './AuthorDigestRequestMetadataValidation';
@@ -9,6 +9,7 @@ interface ICustomerValidations {
 
 interface IReference {
   refer: string;
+  rel: string;
   body: SignatureMetadata & AuthorDigestRequestMetadata;
 }
 
@@ -20,11 +21,11 @@ const CustomerValidations = (props: ICustomerValidations) => {
     {
       metadata.reference.map((item: IReference, index) => {
         const { body, refer } = item;
-        if (metadata.type != 'author-publish-meta-space-server-verification-sign' && body.signature && body.signature.length > 0) {
+        if (metadata["@type"] != 'author-publish-meta-space-server-verification-sign' && body.signature && body.signature.length > 0) {
           return <div key={index}>
             <SignatureMetadataValidation metadata={body} refer={refer} />
           </div>
-        } else if (metadata.type === 'author-publish-meta-space-server-verification-sign' && body.signature && body.signature.length > 0) {
+        } else if (metadata["@type"] === 'author-publish-meta-space-server-verification-sign' && body.signature && body.signature.length > 0) {
           return <div key={index}>
             <AuthorPublishMetaSpaceRequestMetadataSignatureValidation metadata={body} refer={refer} />
           </div>
