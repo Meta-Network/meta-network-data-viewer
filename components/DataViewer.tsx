@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { MetadataPlatform, PlatformIdName, PlatformSourceName } from '../utils/types';
-import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/lib/type/types';
+import { SignatureMetadata, AuthorSignatureMetadata, AuthorDigestMetadata } from '@metaio/meta-signature-util';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
 import renderHTML from 'react-render-html';
@@ -29,7 +29,7 @@ interface IDataViewerProps {
 interface IReference {
   refer: string;
   rel: string;
-  body: SignatureMetadata & AuthorDigestRequestMetadata;
+  body: SignatureMetadata | AuthorDigestMetadata;
 }
 
 function DataViewer<TMetadataType>(props: IDataViewerProps) {
@@ -162,7 +162,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
             <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
             {
               (metadata as SignatureMetadata).reference.map((item: IReference, index) => {
-                const { body } = item;
+                const body = item.body as AuthorDigestMetadata;
                 if (body.title && body.content) {
                   return <div key={index}>
                     <div className=" shadow-inner border rounded border-purple-300 mt-2 p-4">

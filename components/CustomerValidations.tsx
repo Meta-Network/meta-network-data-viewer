@@ -1,4 +1,4 @@
-import { SignatureMetadata, AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/lib/type/types';
+import { SignatureMetadata, AuthorDigestMetadata } from '@metaio/meta-signature-util';
 
 import SignatureMetadataValidation from './SignatureMetadataValidation';
 import AuthorDigestRequestMetadataValidation from './AuthorDigestRequestMetadataValidation';
@@ -10,7 +10,7 @@ interface ICustomerValidations {
 interface IReference {
   refer: string;
   rel: string;
-  body: SignatureMetadata & AuthorDigestRequestMetadata;
+  body: SignatureMetadata & AuthorDigestMetadata;
 }
 
 const CustomerValidations = (props: ICustomerValidations) => {

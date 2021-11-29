@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SignatureMetadata, AuthorSignatureMetadata } from '@metaio/meta-signature-util/lib/type/types';
+import { SignatureMetadata, AuthorSignatureMetadata } from '@metaio/meta-signature-util';
 import { authorDigestSign } from '@metaio/meta-signature-util';
 import { VerifyStatus } from '../utils/status';
 import VerifyResult from './VerifyResult';

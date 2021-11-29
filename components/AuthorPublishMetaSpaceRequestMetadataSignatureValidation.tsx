@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/lib/type/types';
+import { AuthorDigestMetadata } from '@metaio/meta-signature-util';
 import { authorPublishMetaSpaceRequest } from '@metaio/meta-signature-util';
 import { VerifyStatus } from '../utils/status';
 import VerifyResult from './VerifyResult';
 import ShowItem from './ShowItem';
 
 interface AuthorPublishMetaSpaceRequestMetadataSignatureValidationProps {
-  metadata: AuthorDigestRequestMetadata
+  metadata: AuthorDigestMetadata
   refer?: string
 }
 
