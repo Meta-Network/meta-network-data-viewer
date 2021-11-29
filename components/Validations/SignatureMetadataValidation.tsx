@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { SignatureMetadata, AuthorSignatureMetadata } from '@metaio/meta-signature-util';
-import { authorDigestSign } from '@metaio/meta-signature-util';
-import { VerifyStatus } from '../utils/status';
-import VerifyResult from './VerifyResult';
-import ShowItem from './ShowItem';
+import { SignatureMetadata, authorDigestSign } from '@metaio/meta-signature-util';
+import { VerifyStatus } from '../../utils/status';
+import VerifyResult from '../VerifyResult';
+import ShowItem from '../ShowItem';
 
 type SignatureMetadataValidationProps = {
   metadata: SignatureMetadata

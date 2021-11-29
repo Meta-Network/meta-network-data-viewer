@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { AuthorDigestMetadata } from '@metaio/meta-signature-util';
-import { authorDigest } from '@metaio/meta-signature-util';
-import { VerifyStatus } from '../utils/status';
-import VerifyResult from './VerifyResult';
-import ShowItem from './ShowItem';
+import { AuthorDigestMetadata, authorDigest } from '@metaio/meta-signature-util';
+import { VerifyStatus } from '../../utils/status';
+import VerifyResult from '../VerifyResult';
+import ShowItem from '../ShowItem';
 
 type AuthorDigestRequestMetadataValidatioProps = {
   metadata: AuthorDigestMetadata

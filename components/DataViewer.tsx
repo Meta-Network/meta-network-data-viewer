@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { MetadataPlatform, PlatformIdName, PlatformSourceName } from '../utils/types';
-import { SignatureMetadata, AuthorSignatureMetadata, AuthorDigestMetadata } from '@metaio/meta-signature-util';
+import { SignatureMetadata, AuthorDigestMetadata, serverVerificationSignWithContent } from '@metaio/meta-signature-util';
+import { MetadataType } from '../utils/types'
 import dynamic from 'next/dynamic';
 import axios from 'axios';
 import renderHTML from 'react-render-html';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { serverVerificationSign, serverVerificationSignWithContent } from '@metaio/meta-signature-util';
 import CustomerValidations from './CustomerValidations';
 import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/arweave';
 import ShowItem from './ShowItem';
@@ -39,7 +39,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const [id, setId] = useState('');
   const [dataSource, setDataSource] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
-  const [metadata, setMetadata] = useState<TMetadataType | SignatureMetadata>({ status: 'fetching...' } as any);
+  const [metadata, setMetadata] = useState<TMetadataType | MetadataType>({ status: 'fetching...' } as any);
   const [blockNumber, setBlockNumber] = useState<Number>(null);
   const [blockTimestamp, setBlockTimestamp] = useState<number>(0);
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
@@ -149,6 +149,9 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
           </div>
           <div className="break-all">
             {
+              /**
+               * show validations component for customers.
+               */
               (verifyServerMetadataSignatureStatus && (metadata as SignatureMetadata).reference) ? <>
                 <CustomerValidations metadata={metadata as SignatureMetadata} />
               </> : <></>
@@ -158,6 +161,9 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
       </div>
       <div>
         {
+          /**
+           * show the post content.
+           */
           (verifyServerMetadataSignatureStatus && (metadata as SignatureMetadata).reference) ? <>
             <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
             {
