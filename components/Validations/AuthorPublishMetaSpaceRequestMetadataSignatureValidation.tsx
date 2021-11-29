@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
-import { AuthorDigestRequestMetadata } from '@metaio/meta-signature-util/lib/type/types';
-import { authorDigest } from '@metaio/meta-signature-util';
-import { VerifyStatus } from '../utils/status';
-import VerifyResult from './VerifyResult';
-import ShowItem from './ShowItem';
+import { AuthorDigestMetadata, authorPublishMetaSpaceRequest } from '@metaio/meta-signature-util';
+import { VerifyStatus } from '../../utils/status';
+import VerifyResult from '../VerifyResult';
+import ShowItem from '../ShowItem';
 
-type AuthorDigestRequestMetadataValidatioProps = {
-  metadata: AuthorDigestRequestMetadata
+interface AuthorPublishMetaSpaceRequestMetadataSignatureValidationProps {
+  metadata: AuthorDigestMetadata
   refer?: string
 }
 
-const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadataValidatioProps) => {
-
+const AuthorPublishMetaSpaceRequestMetadataSignatureValidation = (props: AuthorPublishMetaSpaceRequestMetadataSignatureValidationProps) => {
   const { metadata, refer } = props;
   const [dig, setDig] = useState('');
   const [verifyStatus, setVerifyStatus] = useState<VerifyStatus>(VerifyStatus.Unverified);
@@ -22,7 +20,6 @@ const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadat
     setDig(metadata.digest);
     setCustomerMetaData(JSON.stringify(metadata));
   }, [metadata]);
-
 
   return <div className="mt-8">
     <h2 className="font-thin text-2xl text-purple-700">Digest and validation</h2>
@@ -39,7 +36,7 @@ const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadat
       <VerifyResult status={verifyStatus} />
       <button onClick={() => {
         try {
-          const result = authorDigest.verify(JSON.parse(customerMetaData));
+          const result = authorPublishMetaSpaceRequest.verify(JSON.parse(customerMetaData));
           result ? setVerifyStatus(VerifyStatus.Verified) : setVerifyStatus(VerifyStatus.VerificationFailed)
         } catch (error) {
           setVerifyStatus(VerifyStatus.VerificationFailed)
@@ -49,4 +46,4 @@ const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadat
   </div>
 }
 
-export default AuthorDigestRequestMetadataValidation;
+export default AuthorPublishMetaSpaceRequestMetadataSignatureValidation;
