@@ -20,7 +20,9 @@ const CustomerValidations = (props: ICustomerValidations) => {
 
   const { metadata } = props;
 
-  if ((metadata as SignatureMetadata).reference.length > 0) {
+  // console.log("CustomerValidations", metadata);
+
+  if ((metadata as SignatureMetadata).reference && (metadata as SignatureMetadata).reference.length > 0) {
     const signatureMetadata: SignatureMetadata = metadata as SignatureMetadata;
     return <>
       {

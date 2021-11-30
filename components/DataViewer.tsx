@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { MetadataPlatform, PlatformIdName, PlatformSourceName } from '../utils/types';
-import { SignatureMetadata, AuthorDigestMetadata, serverVerificationSignWithContent } from '@metaio/meta-signature-util';
+import { SignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, metaNetworkGridsServerSign, serverVerificationSign } from '@metaio/meta-signature-util';
 import { MetadataType } from '../utils/types'
 import dynamic from 'next/dynamic';
 import axios from 'axios';
@@ -46,9 +46,19 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   const getMetadata = useCallback(async () => {
     try {
-      const content: TMetadataType = await (await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 5000 })).data;
-      const verifyStatus = serverVerificationSignWithContent.verify(content as any);
+      let verifyStatus: boolean = false;
+      const content: TMetadataType | MetadataType = await (await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 9000 })).data;
+
+      if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
+        console.log('Verify Meta Network grids');
+        verifyStatus = metaNetworkGridsServerSign.verify(content as BatchGridActionsMetadata);
+      } else {
+        console.log('Server Verification Sign.');
+        verifyStatus = serverVerificationSign.verify(content as SignatureMetadata);
+      }
+      console.log('verify result:', verifyStatus);
       setVerifyServerMetadataSignatureStatus(verifyStatus);
+      setMetadata(content);
       verifyStatus ? setMetadata(content) : toast.warning('Verify server metadata signature failure!');
     } catch (error) {
       if (error.message.includes('Network Error')) {
@@ -63,6 +73,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   const getArweaveTxnStatus = useCallback(async () => {
     const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
+    console.log(block_height, block_indep_hash);
     const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
     setBlockNumber(block_height);
     setBlockTimestamp(timestamp * 1000);
@@ -152,7 +163,10 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
               /**
                * show validations component for customers.
                */
-              (verifyServerMetadataSignatureStatus && (metadata as SignatureMetadata).reference) ? <>
+              (verifyServerMetadataSignatureStatus &&
+                ((metadata as SignatureMetadata).reference) ||
+                ((metadata as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign')
+              ) ? <>
                 <CustomerValidations metadata={metadata as SignatureMetadata} />
               </> : <></>
             }
