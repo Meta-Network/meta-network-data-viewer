@@ -21,7 +21,7 @@ const IPFSViewer: any = (props: { cid: string, ok: boolean }) => (props.ok) ? (
         idName: 'CID',
         dataSourceName: 'IPFS Gateway',
         dataSourceList: ipfsGatewayList,
-        timeout: 10000
+        timeout: 20000
       }
     } />
   </div>
