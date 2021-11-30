@@ -5,7 +5,7 @@ import DataViewer from '../../components/DataViewer';
 const ArweaveViewer: any = (props: { hash: string, ok: boolean }) => (props.ok) ? (
   <div>
     <Head>
-      <title>meta-network-data-viewer</title>
+      <title>meta-network-data-viewer {props.hash}</title>
       <meta name="description" content="meta-network-data-viewer" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
