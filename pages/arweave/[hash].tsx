@@ -21,7 +21,7 @@ const ArweaveViewer: any = (props: { hash: string, ok: boolean }) => (props.ok) 
         idName: 'hash',
         dataSourceName: 'Arweave Node Server',
         dataSourceList: arweaveNodeList,
-        timeout: 10000
+        timeout: 20000
       }
     } />
   </div>

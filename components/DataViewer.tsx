@@ -47,7 +47,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const getMetadata = useCallback(async () => {
     try {
       let verifyStatus: boolean = false;
-      const content: TMetadataType | MetadataType = await (await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 9000 })).data;
+      const content: TMetadataType | MetadataType = await (await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 1000 })).data;
 
       if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
         console.log('Verify Meta Network grids');
