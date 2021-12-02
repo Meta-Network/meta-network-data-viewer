@@ -1,13 +1,13 @@
 import {
   SignatureMetadata,
-  AuthorSignatureMetadata,
+  AuthorPostSignatureMetadata,
   AuthorDigestMetadata,
   PostMetadata,
-  BatchGridActionsMetadata
+  BatchGridActionsMetadata,
+  AuthorMediaSignatureMetadata
 } from '@metaio/meta-signature-util';
 
 export type MetadataPlatform = 'ipfs' | 'arweave';
 export type PlatformIdName = 'hash' | 'HASH' | 'cid' | 'CID' | string;
 export type PlatformSourceName = 'IPFS Gateway' | 'Arweave node server' | string;
-
-export type MetadataType = SignatureMetadata | AuthorSignatureMetadata | AuthorDigestMetadata | PostMetadata | BatchGridActionsMetadata;
+export type MetadataType = SignatureMetadata | AuthorMediaSignatureMetadata | AuthorPostSignatureMetadata | AuthorDigestMetadata | PostMetadata | BatchGridActionsMetadata;

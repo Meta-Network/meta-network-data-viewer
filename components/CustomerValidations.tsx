@@ -1,11 +1,11 @@
-import { SignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata } from '@metaio/meta-signature-util';
+import { SignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '@metaio/meta-signature-util';
 import { MetadataType } from '../utils/types';
 
 import SignatureMetadataValidation from './Validations/SignatureMetadataValidation';
 import AuthorDigestRequestMetadataValidation from './Validations/AuthorDigestRequestMetadataValidation';
 import AuthorPublishMetaSpaceRequestMetadataSignatureValidation from './Validations/AuthorPublishMetaSpaceRequestMetadataSignatureValidation';
 import MetaNetworkGridsServerSignValidations from './Validations/MetaNetworkGridsServerSignValidations';
-
+import AuthorMediaSignatureMetadataValidation from './Validations/AuthorMediaSignatureMetadataValidation';
 interface ICustomerValidations {
   metadata: MetadataType
 }
@@ -51,6 +51,15 @@ const CustomerValidations = (props: ICustomerValidations) => {
     return <>
       <MetaNetworkGridsServerSignValidations metadata={batchGridActionsMetadata} />
     </>;
+  } else if ((metadata as AuthorMediaSignatureMetadata)['@type'] === 'author-media-sign') {
+    const authorMediaSignatureMetadata: AuthorMediaSignatureMetadata = metadata as AuthorMediaSignatureMetadata;
+    console.log(`authorMediaSignatureMetadata`);
+    return <>
+      <AuthorMediaSignatureMetadataValidation metadata={authorMediaSignatureMetadata} />
+    </>;
+  } else {
+    console.error('CustomerValidations', metadata);
+    return <></>;
   }
 }
 
