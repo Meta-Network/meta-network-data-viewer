@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { MetadataPlatform, PlatformIdName, PlatformSourceName } from '../utils/types';
-import { SignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, metaNetworkGridsServerSign, serverVerificationSign } from '@metaio/meta-signature-util';
+import {
+  SignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata,
+  metaNetworkGridsServerSign, serverVerificationSign, AuthorMediaSignatureMetadata,
+  authorMediaSign
+} from '@metaio/meta-signature-util';
 import { MetadataType } from '../utils/types'
 import dynamic from 'next/dynamic';
 import axios from 'axios';
@@ -47,11 +51,13 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const getMetadata = useCallback(async () => {
     try {
       let verifyStatus: boolean = false;
-      const content: TMetadataType | MetadataType = await (await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 1000 })).data;
-
+      const requestResult = await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 1000 });
+      const content: TMetadataType | MetadataType = await (requestResult).data;
       if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
         console.log('Verify Meta Network grids');
         verifyStatus = metaNetworkGridsServerSign.verify(content as BatchGridActionsMetadata);
+      } else if ((content as AuthorMediaSignatureMetadata)['@type'] === 'author-media-sign') {
+        verifyStatus = authorMediaSign.verify(content as AuthorMediaSignatureMetadata);
       } else {
         console.log('Server Verification Sign.');
         verifyStatus = serverVerificationSign.verify(content as SignatureMetadata);
@@ -163,11 +169,11 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
               /**
                * show validations component for customers.
                */
-              (verifyServerMetadataSignatureStatus &&
-                ((metadata as SignatureMetadata).reference) ||
-                ((metadata as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign')
+              (verifyServerMetadataSignatureStatus
+                // ((metadata as SignatureMetadata).reference) ||
+                // ((metadata as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign')
               ) ? <>
-                <CustomerValidations metadata={metadata as SignatureMetadata} />
+                <CustomerValidations metadata={metadata as TMetadataType} />
               </> : <></>
             }
           </div>
