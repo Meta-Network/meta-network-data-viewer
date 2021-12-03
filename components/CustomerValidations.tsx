@@ -1,4 +1,4 @@
-import { SignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '@metaio/meta-signature-util';
+import { BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '@metaio/meta-signature-util';
 import { MetadataType } from '../utils/types';
 
 import SignatureMetadataValidation from './Validations/SignatureMetadataValidation';
@@ -13,7 +13,7 @@ interface ICustomerValidations {
 interface IReference {
   refer: string;
   rel: string;
-  body: SignatureMetadata & AuthorDigestMetadata;
+  body: BaseSignatureMetadata & AuthorDigestMetadata;
 }
 
 const CustomerValidations = (props: ICustomerValidations) => {
@@ -22,8 +22,8 @@ const CustomerValidations = (props: ICustomerValidations) => {
 
   // console.log("CustomerValidations", metadata);
 
-  if ((metadata as SignatureMetadata).reference && (metadata as SignatureMetadata).reference.length > 0) {
-    const signatureMetadata: SignatureMetadata = metadata as SignatureMetadata;
+  if ((metadata as BaseSignatureMetadata).reference && (metadata as BaseSignatureMetadata).reference.length > 0) {
+    const signatureMetadata: BaseSignatureMetadata = metadata as BaseSignatureMetadata;
     return <>
       {
         signatureMetadata.reference.map((item: IReference, index) => {
