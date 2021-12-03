@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { VerifyStatus } from '../../utils/status';
 import VerifyResult from '../VerifyResult';
 import ShowItem from '../ShowItem';
+// import Image from 'next/image';
+import DataSourceContext from '../../utils/dataSource'
 
 import {
   AuthorMediaSignatureMetadata,
@@ -22,9 +24,17 @@ const AuthorMediaSignatureMetadataValidation = (props: ValidatioProps) => {
     setCustomerMetaData(JSON.stringify(metadata));
   }, [metadata]);
 
+  const { platform, source } = useContext(DataSourceContext);
+  console.log(platform, source);
+
   return <div className="mt-8">
     <h2 className="font-thin text-2xl text-purple-700">Digest and validation</h2>
     {metadata.title ? <ShowItem title="Title:" content={metadata.title} /> : <></>}
+    {
+      metadata.contentType === 'image/jpeg' || metadata.contentType === 'image/png' ? <div className="my-4">
+        <img className="rounded-xl shadow-xl drop-shadow-2xl" src={`${source.replace(':hash', metadata.platformHash)}`} />
+      </div> : <></>
+    }
     <div className="flex flex-col mt-2">
       <p className="font-thin text-sm text-purple-700">Body:</p>
       <textarea value={customerMetaData} onChange={(e) => {
@@ -32,6 +42,7 @@ const AuthorMediaSignatureMetadataValidation = (props: ValidatioProps) => {
         setCustomerMetaData(e.target.value);
       }}
         className="p-1 my-1 w-full  py-1 h-40  text-xs rounded border border-purple-300 font-thin  text-purple-400" />
+
       <VerifyResult status={verifyStatus} />
       <button onClick={() => {
         try {

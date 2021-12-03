@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { SignatureMetadata, authorDigestSign } from '@metaio/meta-signature-util';
+import { BaseSignatureMetadata, authorDigestSign } from '@metaio/meta-signature-util';
 import { VerifyStatus } from '../../utils/status';
 import VerifyResult from '../VerifyResult';
 import ShowItem from '../ShowItem';
 
 type SignatureMetadataValidationProps = {
-  metadata: SignatureMetadata
+  metadata: BaseSignatureMetadata
   refer?: string
 }
 
