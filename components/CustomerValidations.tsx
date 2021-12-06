@@ -58,7 +58,6 @@ const CustomerValidations = (props: ICustomerValidations) => {
       <AuthorMediaSignatureMetadataValidation metadata={authorMediaSignatureMetadata} />
     </>;
   } else {
-    console.error('CustomerValidations', metadata);
     return <></>;
   }
 }
