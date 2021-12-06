@@ -8,30 +8,28 @@ const ArweaveViewer: any = (props) => {
   const router = useRouter();
   const { hash } = router.query;
 
-  return (hash) ? (
-    <div>
-      <Head>
-        <title>meta-network-data-viewer {hash}</title>
-        <meta name="description" content="meta-network-data-viewer" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <header className=" bg-purple-900">
-        <div className="mx-auto max-w-6xl p-4">
-          <h1 className="text-2xl font-thin text-white">meta-network-data-viewer</h1>
-        </div>
-      </header>
-      <DataViewer options={
-        {
-          platform: 'arweave',
-          id: hash as string,
-          idName: 'hash',
-          dataSourceName: 'Arweave Node Server',
-          dataSourceList: arweaveNodeList,
-          timeout: 20000
-        }
-      } />
-    </div>
-  ) : <>CID ERROR</>
+  return <div>
+    <Head>
+      <title>meta-network-data-viewer {hash}</title>
+      <meta name="description" content="meta-network-data-viewer" />
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
+    <header className=" bg-purple-900">
+      <div className="mx-auto max-w-6xl p-4">
+        <h1 className="text-2xl font-thin text-white">meta-network-data-viewer</h1>
+      </div>
+    </header>
+    <DataViewer options={
+      {
+        platform: 'arweave',
+        id: hash as string,
+        idName: 'hash',
+        dataSourceName: 'Arweave Node Server',
+        dataSourceList: arweaveNodeList,
+        timeout: 20000
+      }
+    } />
+  </div>
 }
 
 export default ArweaveViewer;
