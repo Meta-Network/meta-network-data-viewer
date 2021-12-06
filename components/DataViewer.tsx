@@ -53,6 +53,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     try {
       let verifyStatus: boolean = false;
       const requestResult = await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 1000 });
+
       const content: TMetadataType | MetadataType = await (requestResult).data;
       if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
         console.log('Verify Meta Network grids');
@@ -79,8 +80,8 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   }, [id, dataSource, options]);
 
   const getArweaveTxnStatus = useCallback(async () => {
+    if (!options.id) return;
     const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
-    console.log(block_height, block_indep_hash);
     const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
     setBlockNumber(block_height);
     setBlockTimestamp(timestamp * 1000);
@@ -109,11 +110,9 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
         <div className="w-full  flex flex-col md:flex-row md:space-x-2 ">
           <div className="w-full md:w-2/3 my-2">
             <h2 className="font-thin text-2xl text-purple-700">{options.idName}</h2>
-            <input type="text"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-              disabled={true}
-              className="w-full font-thin text-xs text-purple-700 bg-purple-100 p-2 rounded border border-purple-300 placeholder-purple-200 h-10 " placeholder={`Please input ${options.idName}.`} />
+            <div className="w-full flex flex-col justify-center font-thin text-xs text-purple-700 bg-purple-100 px-2 rounded border border-purple-300 placeholder-purple-200 h-10 ">
+              {id}
+            </div>
           </div>
           <div className="w-full md:w-1/3 my-2">
             <h2 className="font-thin text-2xl text-purple-700">Select {options.dataSourceName}.</h2>

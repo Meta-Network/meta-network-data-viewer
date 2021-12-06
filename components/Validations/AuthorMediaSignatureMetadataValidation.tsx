@@ -24,8 +24,7 @@ const AuthorMediaSignatureMetadataValidation = (props: ValidatioProps) => {
     setCustomerMetaData(JSON.stringify(metadata));
   }, [metadata]);
 
-  const { platform, source } = useContext(DataSourceContext);
-  console.log(platform, source);
+  const { source } = useContext(DataSourceContext); //source is the data source
 
   return <div className="mt-8">
     <h2 className="font-thin text-2xl text-purple-700">Digest and validation</h2>
