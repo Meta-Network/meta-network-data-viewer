@@ -53,7 +53,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     try {
       let verifyStatus: boolean = false;
       const requestResult = await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 1000 });
-      console.log(requestResult);
+
       const content: TMetadataType | MetadataType = await (requestResult).data;
       if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
         console.log('Verify Meta Network grids');
@@ -80,8 +80,8 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   }, [id, dataSource, options]);
 
   const getArweaveTxnStatus = useCallback(async () => {
+    if (!options.id) return;
     const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
-    console.log(block_height, block_indep_hash);
     const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
     setBlockNumber(block_height);
     setBlockTimestamp(timestamp * 1000);
