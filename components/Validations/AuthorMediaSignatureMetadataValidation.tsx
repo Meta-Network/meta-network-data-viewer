@@ -4,11 +4,8 @@ import VerifyResult from '../VerifyResult';
 import ShowItem from '../ShowItem';
 // import Image from 'next/image';
 import DataSourceContext from '../../utils/dataSource'
-
-import {
-  AuthorMediaSignatureMetadata,
-  authorMediaSign
-} from '@metaio/meta-signature-util';
+import { AuthorMediaSignatureMetadata, authorMediaSign } from '@metaio/meta-signature-util';
+import platformSourceList from '../../utils/source';
 
 type ValidatioProps = {
   metadata: AuthorMediaSignatureMetadata
@@ -19,19 +16,40 @@ const AuthorMediaSignatureMetadataValidation = (props: ValidatioProps) => {
   const [verifyStatus, setVerifyStatus] = useState<VerifyStatus>(VerifyStatus.Unverified);
   const [customerMetaData, setCustomerMetaData] = useState<string>('');
 
+  const [customerSource, setCustomerSource] = useState<string>('');
+
   useEffect(() => {
     setVerifyStatus(VerifyStatus.Unverified);
     setCustomerMetaData(JSON.stringify(metadata));
   }, [metadata]);
 
-  const { source } = useContext(DataSourceContext); //source is the data source
+  const { source, platform } = useContext(DataSourceContext);
+
+  const mediaDataPlatform = metadata.platform;  //source is the data source
+
+  useEffect(() => {
+    if (platform !== mediaDataPlatform) {
+      setCustomerSource(platformSourceList[mediaDataPlatform][0]);
+    }
+
+  }, [])
 
   return <div className="mt-8">
     <h2 className="font-thin text-2xl text-purple-700">Digest and validation</h2>
     {metadata.title ? <ShowItem title="Title:" content={metadata.title} /> : <></>}
     {
+      // customer slector
+      platform !== mediaDataPlatform ? <select value={customerSource} onChange={(e) => { setCustomerSource(e.target.value) }}
+        className="w-full font-thin my-1 rounded text-xs border text-purple-700 border-purple-300 placeholder-purple-200">
+        {platformSourceList[mediaDataPlatform].map((item: string, index) => {
+          return <option key={index} value={item}>{item.replace(':hash', '')}</option>
+        })}
+      </select> : <></>
+    }
+    {
+      // TODO - add more fields
       metadata.contentType === 'image/jpeg' || metadata.contentType === 'image/png' ? <div className="my-4">
-        <img className="rounded-xl shadow-xl drop-shadow-2xl" src={`${source.replace(':hash', metadata.platformHash)}`} />
+        <img className="rounded-xl shadow-xl drop-shadow-2xl" src={`${(platform === mediaDataPlatform ? source.replace(':hash', metadata.platformHash) : customerSource.replace(':hash', metadata.platformHash))}`} />
       </div> : <></>
     }
     <div className="flex flex-col mt-2">
