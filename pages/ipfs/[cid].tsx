@@ -16,7 +16,7 @@ const IPFSViewer: any = () => {
     </Head>
     <header className=" bg-purple-900">
       <div className="mx-auto max-w-6xl p-4">
-        <h1 className="text-2xl font-thin text-white">meta-network-data-viewer</h1>
+        <h1 className="m-0 text-2xl font-thin text-white">meta-network-data-viewer</h1>
       </div>
     </header>
     <DataViewer options={

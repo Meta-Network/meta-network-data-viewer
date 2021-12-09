@@ -5,7 +5,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import 'react-toastify/dist/ReactToastify.css';
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,7 +24,7 @@ const Home: NextPage = () => {
         </Head>
         <ToastContainer />
         <div className="">
-          <h1 className="text-white flex flex-col justify-center items-center">
+          <h1 className="m-0 text-white flex flex-col justify-center items-center">
             <Image src="/logo.png" width="192" height="27" alt="Meta Network" />
             <span className="mt-4 text-2xl font-thin" >
               DATA VIEWER
