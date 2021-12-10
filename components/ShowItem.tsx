@@ -11,8 +11,8 @@ const ShowItem = (props: itemProps) => {
   if (props.url && props.urlTitle) {
     return <div className="mt-2">
       <p className="font-thin text-sm text-purple-700">{title}</p>
-      <p className="p-1 my-1  font-thin text-xs bg-purple-100 rounded text-purple-700 flex flex-row justify-between">
-        <span>{content}</span>
+      <p className="p-1 my-1  font-thin text-xs bg-purple-100 rounded text-purple-700 flex flex-row justify-between break-words">
+        <span className=" break-words">{content}</span>
         <a href={props.url} target="_blank" className="underline" rel="noreferrer">
           {props.urlTitle || "check"}
         </a>
@@ -21,7 +21,7 @@ const ShowItem = (props: itemProps) => {
   } else {
     return <div className="mt-2">
       <p className="font-thin text-sm text-purple-700">{title}</p>
-      <p className="p-1 my-1  font-thin text-xs bg-purple-100 rounded text-purple-700">{content}</p>
+      <p className="p-1 my-1  font-thin text-xs bg-purple-100 rounded text-purple-700 break-words">{content}</p>
     </div>
   }
 

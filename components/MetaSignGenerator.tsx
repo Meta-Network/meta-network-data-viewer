@@ -3,7 +3,9 @@ import * as signUtils from '@metaio/meta-signature-util';
 import * as utils from '@metaio/meta-signature-util/lib/utils';
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import ShowItem from "./ShowItem";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const MetaSignGenerator = () => {
 
@@ -31,7 +33,6 @@ const MetaSignGenerator = () => {
           utilsMenuItems.push(key);
         }
       })
-      console.log(utilsMenuItems);
       setUtilsMenus(utilsMenuItems)
     }
   }, [])
@@ -42,6 +43,7 @@ const MetaSignGenerator = () => {
       <meta name="description" content="meta-network-data-viewer" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
+    <ToastContainer />
     <div >
       <header className=" bg-purple-900">
         <div className="mx-auto max-w-6xl p-4">
@@ -96,7 +98,11 @@ const MetaSignGenerator = () => {
             {
               utilsMenus.map((item, i) => {
                 return <li key={i}
-                  onClick={() => setCurrentItem(item)}
+                  onClick={
+                    () => {
+                      setCurrentItem(item)
+                    }
+                  }
                   className="hover:text-purple-50 hover:bg-purple-500">
                   <a className="text-xs">{item}</a>
                 </li>
@@ -119,7 +125,7 @@ const MetaSignGenerator = () => {
                       tags: 'Testing Tag, UnitTest',
                     },
                     authorDigestSign: {
-                      a: 'b'
+                      domain: 'metaspace.life'
                     }
 
                   }
@@ -129,15 +135,25 @@ const MetaSignGenerator = () => {
                   const [verifyTextArea, setVerifyTextArea] = useState<string>('');
                   const [payload, setPayload] = useState<string>('');
 
+                  const [authorDigest, setAuthorDigest] = useState<string>('');
+
                   useEffect(() => {
-                    console.log(currentItem);
                     setPayload(JSON.stringify(payloadExample[currentItem] || {}, null, 2));
+                    setGenerateTextArea('');
+                    setVerifyTextArea('');
                   }, [currentItem])
 
                   if (currentItem.toLowerCase() == 'help') {
                     resultForm = <>Help!!</>;
                   } else {
                     resultForm = <div>
+                      {authorDigest.length > 0 ? <div className="my-4">
+                        <ShowItem title="AuthorDigst" content={authorDigest} />
+                        <button
+                          onClick={() => { setAuthorDigest('') }}
+                          className="btn btn-sm font-thin w-full bg-purple-500 border-0 hover:bg-purple-400">clear</button>
+                      </div> : <></>}
+
                       <h3 className="p-0 m-0 font-bold text-xs text-purple-500">Payload</h3>
                       <textarea
                         value={payload}
@@ -148,17 +164,26 @@ const MetaSignGenerator = () => {
                       <button
                         onClick={() => {
                           let result;
+                          const utils = signUtils
 
-                          if (currentItem === 'authorDigest') {
-                            signUtils[currentItem].generate(JSON.parse(payload));
+                          if (currentItem == 'authorDigest') {
+
+                            result = signUtils[currentItem].generate(JSON.parse(payload));
                             setGenerateTextArea(JSON.stringify(result, null, 2));
+                            setAuthorDigest(result.digest);
                           }
 
-                          if (currentItem === 'authorDigestSign') {
-                            // signUtils[currentItem].generate(JSON.parse(payload));
-                            setGenerateTextArea(JSON.stringify(result, null, 2));
+                          if (currentItem == 'authorDigestSign') {
+                            try {
+                              result = signUtils[currentItem].generate(
+                                { private: privateKey, public: publicKey },
+                                payloadExample[currentItem].domain || 'metaspace.life',
+                                authorDigest);
+                              setGenerateTextArea(JSON.stringify(result, null, 2));
+                            } catch (e) {
+                              toast.warning('Please check your privateKey, publicKey. the u need generate authorDigest in authorDigest menu.')
+                            }
                           }
-
 
                         }}
                         className="btn btn-sm font-thin w-full bg-purple-500 border-0 hover:bg-purple-400">GENERATE</button>
@@ -167,14 +192,18 @@ const MetaSignGenerator = () => {
                         onChange={(e) => setGenerateTextArea(e.target.value)}
                         name="" id="" className="mt-1 border border-purple-200 w-full rounded-lg p-2 h-40">
                       </textarea>
-
                       <h3 className="p-0 m-0 font-bold text-xs mt-4 text-purple-500">Verify function</h3>
-                      <textarea
-                        value={verifyTextArea}
-                        onChange={(e) => setVerifyTextArea(e.target.value)}
-                        name="" id="" className="mt-1 border border-purple-200 w-full rounded-lg p-2 h-40">
-                      </textarea>
-                      <button className="btn btn-sm font-thin w-full bg-purple-500 border-0 hover:bg-purple-400">VERIFY</button>
+
+                      <button
+                        onClick={() => {
+                          try {
+                            const result = signUtils[currentItem].verify(JSON.parse(generateTextArea));
+                            result ? toast.success('Verify success') : toast.warning('Verify failed');
+                          } catch (e) {
+                            toast.warning('Verify failed');
+                          }
+                        }}
+                        className="btn btn-sm font-thin w-full bg-purple-500 border-0 hover:bg-purple-400">VERIFY</button>
                     </div>
                   }
                   return resultForm;
