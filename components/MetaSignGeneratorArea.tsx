@@ -124,7 +124,15 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
   }, [currentItem])
 
   if (currentItem.toLowerCase() == 'help') {
-    resultForm = <>Help!!</>;
+    resultForm = <>
+      <p>
+        Generate publick key and private key on top.
+      </p>
+      <p>
+        You can use this tool to test and generate MetaNetwork metadata by selecting the function in the left menu.
+      </p>
+
+    </>;
   } else {
     resultForm = <div>
       {authorDigest.length > 0 ? <div className="my-4">

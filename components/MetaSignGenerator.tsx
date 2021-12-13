@@ -95,7 +95,7 @@ const MetaSignGenerator = () => {
           <ul className="menu py-3 border border-purple-400 bg-base-100 rounded-xl text-xs w-80 
         shadow-inner drop-shadow-2xl ">
             <li className="menu-title"><span>Menu Title</span></li>
-            <li key="help" className="hover:text-purple-50 hover:bg-purple-500" onClick={() => setCurrentItem('Help')}><a>Index & help</a></li>
+            <li key="help" className="hover:text-purple-50 hover:bg-purple-500" onClick={() => setCurrentItem('help')}><a>Index & help</a></li>
             {
               utilsMenus.map((item, i) => {
                 return <li key={i}
