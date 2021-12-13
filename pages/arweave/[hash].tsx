@@ -2,7 +2,6 @@ import Head from 'next/head';
 import arweaveNodeList from '../../arweave-node.json';
 import DataViewer from '../../components/DataViewer';
 import { useRouter } from 'next/router';
-import Footer from '../../components/footer';
 
 const ArweaveViewer: any = (props) => {
 

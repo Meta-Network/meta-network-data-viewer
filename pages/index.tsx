@@ -7,7 +7,7 @@ import Link from 'next/link'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Footer from '../components/footer';
+import ViewerFooter from '../components/ViewerFooter';
 
 const Home: NextPage = () => {
 
@@ -76,7 +76,7 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className='max-w-2xl mx-auto'>
-          <Footer />
+          <ViewerFooter />
         </div>
 
       </div>

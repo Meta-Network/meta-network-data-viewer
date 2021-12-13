@@ -15,7 +15,7 @@ import CustomerValidations from './CustomerValidations';
 import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/arweave';
 import ShowItem from './ShowItem';
 import DataSourceContext from '../utils/dataSource';
-import Footer from './footer';
+import ViewerFooter from './ViewerFooter';
 
 const md = require('markdown-it')().use(require('markdown-it-plantuml'));
 
@@ -208,7 +208,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
           }
 
         </div>
-        <Footer />
+        <ViewerFooter />
       </main></DataSourceContext.Provider>
   </>;
 }
