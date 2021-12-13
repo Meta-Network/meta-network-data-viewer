@@ -7,7 +7,7 @@ import ShowItem from "./ShowItem";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import MetaSignGeneratorArea from './MetaSignGeneratorArea';
-import Footer from "./footer";
+import ViewerFooter from "./ViewerFooter";
 
 const MetaSignGenerator = () => {
 
@@ -118,7 +118,7 @@ const MetaSignGenerator = () => {
             </div>
           </div>
         </div>
-        <Footer />
+        <ViewerFooter />
       </div>
     </div>
 
