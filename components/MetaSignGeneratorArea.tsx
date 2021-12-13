@@ -74,7 +74,39 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
         metaSpaceSiteProofUrl: '',
         inviterUserId: 0,
       },
-    ]
+    ],
+    serverVerificationSign: {
+      "@context": "https://metanetwork.online/ns/cms",
+      "type": "server-verification-sign",
+      "signatureAlgorithm": "curve25519",
+      "version": "2021-11-01-01",
+      "publicKey": "0x7660c1fc42a2d9aa3f0a4551db9e63f169ecfd56571add56622a6e4824162f1f",
+      "nonce": "0x9156ecb504eeddf5b9d5b67b",
+      "claim": "I, meta-cms.vercel.mttk.net authorize request (sign: 0x1debb726c6d981c16465e98a24362db21c9835590037c6abc57447e4e5a62e9d29791ab521701b6ae6399ad25d3db242268041804156df1fbb1ef49d7cb41f0b) using key: 0x7660c1fc42a2d9aa3f0a4551db9e63f169ecfd56571add56622a6e4824162f1f", "signature": "0xe2d898b09ae3b94a162bfdb2fc9e0330301c7647d0536291f31cfb69837436162990a35588c5bdd4a11b07653965531dcf4766b22d88562498d409da4f2e1c0e",
+      "ts": 1636613485184
+    },
+    serverVerificationSignWithContent: {
+      "@context": "https://metanetwork.online/ns/cms",
+      "type": "server-verification-sign",
+      "signatureAlgorithm": "curve25519",
+      "version": "2021-11-01-01",
+      "publicKey": "0x7660c1fc42a2d9aa3f0a4551db9e63f169ecfd56571add56622a6e4824162f1f", "nonce": "0x9156ecb504eeddf5b9d5b67b", "claim": "I, meta-cms.vercel.mttk.net authorize request (sign: 0x1debb726c6d981c16465e98a24362db21c9835590037c6abc57447e4e5a62e9d29791ab521701b6ae6399ad25d3db242268041804156df1fbb1ef49d7cb41f0b) using key: 0x7660c1fc42a2d9aa3f0a4551db9e63f169ecfd56571add56622a6e4824162f1f", "signature": "0xe2d898b09ae3b94a162bfdb2fc9e0330301c7647d0536291f31cfb69837436162990a35588c5bdd4a11b07653965531dcf4766b22d88562498d409da4f2e1c0e", "ts": 1636613485184, "reference": [{ "refer": "bafybeibu4wnm7bymptipt3lyvuyqpirn5ejcfu6gtcw7lcicziibysfpgy", "body": { "@context": "https://metanetwork.online/ns/cms", "type": "author-digest", "algorithm": "sha256", "version": "2021-11-01-01", "title": "测试标题修改用的文章-修改标题2", "cover": "", "summary": "测试标题修改用的文章的正文\n\n修改了一次标题\n\n", "content": "测试标题修改用的文章的正文\n\n- 修改了一次标题\n", "license": "", "categories": "", "tags": "", "digest": "0xb40d949d3335748a2438fe9006189fe32d17bc072508499a3aad09a8f1dd8a4d", "ts": 1636613506400 } }, { "refer": "bafybeih4msz5khyyuplw4r327yp4pjx4zxts2ieyheev2yixvl2acbxk5q", "body": { "@context": "https://metanetwork.online/ns/cms", "type": "author-digest-sign", "signatureAlgorithm": "curve25519", "version": "2021-11-01-01", "publicKey": "0xcbf139ba234cddf0bbd5c739d3c072bd12779b0e4b6b491a8fd8c9885eb2971f", "digest": "0xb40d949d3335748a2438fe9006189fe32d17bc072508499a3aad09a8f1dd8a4d", "nonce": "0x0a2a7af12935a5a2dc06c71f", "claim": "I authorize publishing by metaspaces.life from this device using key: 0xcbf139ba234cddf0bbd5c739d3c072bd12779b0e4b6b491a8fd8c9885eb2971f", "signature": "0x1debb726c6d981c16465e98a24362db21c9835590037c6abc57447e4e5a62e9d29791ab521701b6ae6399ad25d3db242268041804156df1fbb1ef49d7cb41f0b", "ts": 1636613506403 } }]
+    },
+    authorPublishMetaSpaceRequest: {
+      "@context": "https://metanetwork.online/ns/cms",
+      "type": "server-verification-sign",
+      "signatureAlgorithm": "curve25519",
+      "version": "2021-11-01-01",
+      "publicKey": "0x7660c1fc42a2d9aa3f0a4551db9e63f169ecfd56571add56622a6e4824162f1f", "nonce": "0x9156ecb504eeddf5b9d5b67b", "claim": "I, meta-cms.vercel.mttk.net authorize request (sign: 0x1debb726c6d981c16465e98a24362db21c9835590037c6abc57447e4e5a62e9d29791ab521701b6ae6399ad25d3db242268041804156df1fbb1ef49d7cb41f0b) using key: 0x7660c1fc42a2d9aa3f0a4551db9e63f169ecfd56571add56622a6e4824162f1f", "signature": "0xe2d898b09ae3b94a162bfdb2fc9e0330301c7647d0536291f31cfb69837436162990a35588c5bdd4a11b07653965531dcf4766b22d88562498d409da4f2e1c0e", "ts": 1636613485184, "reference": [{ "refer": "bafybeibu4wnm7bymptipt3lyvuyqpirn5ejcfu6gtcw7lcicziibysfpgy", "body": { "@context": "https://metanetwork.online/ns/cms", "type": "author-digest", "algorithm": "sha256", "version": "2021-11-01-01", "title": "测试标题修改用的文章-修改标题2", "cover": "", "summary": "测试标题修改用的文章的正文\n\n修改了一次标题\n\n", "content": "测试标题修改用的文章的正文\n\n- 修改了一次标题\n", "license": "", "categories": "", "tags": "", "digest": "0xb40d949d3335748a2438fe9006189fe32d17bc072508499a3aad09a8f1dd8a4d", "ts": 1636613506400 } }, { "refer": "bafybeih4msz5khyyuplw4r327yp4pjx4zxts2ieyheev2yixvl2acbxk5q", "body": { "@context": "https://metanetwork.online/ns/cms", "type": "author-digest-sign", "signatureAlgorithm": "curve25519", "version": "2021-11-01-01", "publicKey": "0xcbf139ba234cddf0bbd5c739d3c072bd12779b0e4b6b491a8fd8c9885eb2971f", "digest": "0xb40d949d3335748a2438fe9006189fe32d17bc072508499a3aad09a8f1dd8a4d", "nonce": "0x0a2a7af12935a5a2dc06c71f", "claim": "I authorize publishing by metaspaces.life from this device using key: 0xcbf139ba234cddf0bbd5c739d3c072bd12779b0e4b6b491a8fd8c9885eb2971f", "signature": "0x1debb726c6d981c16465e98a24362db21c9835590037c6abc57447e4e5a62e9d29791ab521701b6ae6399ad25d3db242268041804156df1fbb1ef49d7cb41f0b", "ts": 1636613506403 } }]
+    },
+    authorPublishMetaSpaceServerVerificationSign: {
+      "@context": "https://metanetwork.online/ns/cms",
+      "type": "server-verification-sign",
+      "signatureAlgorithm": "curve25519",
+      "version": "2021-11-01-01",
+      "publicKey": "0x7660c1fc42a2d9aa3f0a4551db9e63f169ecfd56571add56622a6e4824162f1f", "nonce": "0x9156ecb504eeddf5b9d5b67b", "claim": "I, meta-cms.vercel.mttk.net authorize request (sign: 0x1debb726c6d981c16465e98a24362db21c9835590037c6abc57447e4e5a62e9d29791ab521701b6ae6399ad25d3db242268041804156df1fbb1ef49d7cb41f0b) using key: 0x7660c1fc42a2d9aa3f0a4551db9e63f169ecfd56571add56622a6e4824162f1f", "signature": "0xe2d898b09ae3b94a162bfdb2fc9e0330301c7647d0536291f31cfb69837436162990a35588c5bdd4a11b07653965531dcf4766b22d88562498d409da4f2e1c0e", "ts": 1636613485184, "reference": [{ "refer": "bafybeibu4wnm7bymptipt3lyvuyqpirn5ejcfu6gtcw7lcicziibysfpgy", "body": { "@context": "https://metanetwork.online/ns/cms", "type": "author-digest", "algorithm": "sha256", "version": "2021-11-01-01", "title": "测试标题修改用的文章-修改标题2", "cover": "", "summary": "测试标题修改用的文章的正文\n\n修改了一次标题\n\n", "content": "测试标题修改用的文章的正文\n\n- 修改了一次标题\n", "license": "", "categories": "", "tags": "", "digest": "0xb40d949d3335748a2438fe9006189fe32d17bc072508499a3aad09a8f1dd8a4d", "ts": 1636613506400 } }, { "refer": "bafybeih4msz5khyyuplw4r327yp4pjx4zxts2ieyheev2yixvl2acbxk5q", "body": { "@context": "https://metanetwork.online/ns/cms", "type": "author-digest-sign", "signatureAlgorithm": "curve25519", "version": "2021-11-01-01", "publicKey": "0xcbf139ba234cddf0bbd5c739d3c072bd12779b0e4b6b491a8fd8c9885eb2971f", "digest": "0xb40d949d3335748a2438fe9006189fe32d17bc072508499a3aad09a8f1dd8a4d", "nonce": "0x0a2a7af12935a5a2dc06c71f", "claim": "I authorize publishing by metaspaces.life from this device using key: 0xcbf139ba234cddf0bbd5c739d3c072bd12779b0e4b6b491a8fd8c9885eb2971f", "signature": "0x1debb726c6d981c16465e98a24362db21c9835590037c6abc57447e4e5a62e9d29791ab521701b6ae6399ad25d3db242268041804156df1fbb1ef49d7cb41f0b", "ts": 1636613506403 } }]
+    }
+
 
   }
 
@@ -152,6 +184,32 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
                 JSON.parse(payload));
               setGenerateTextArea(JSON.stringify(result, null, 2));
             } catch (error) {
+              toast.warning('Please check your privateKey, publicKey. the u need generate authorDigest in authorDigest menu.')
+            }
+          }
+
+          if (currentItem == 'serverVerificationSign' || currentItem == 'authorPublishMetaSpaceServerVerificationSign') {
+            try {
+              result = signUtils[currentItem].generate(
+                { private: privateKey, public: publicKey },
+                'metaspace.life',
+                JSON.parse(payload), '');
+              setGenerateTextArea(JSON.stringify(result, null, 2));
+            } catch (error) {
+              console.log(error);
+              toast.warning('Please check your privateKey, publicKey. the u need generate authorDigest in authorDigest menu.')
+            }
+          }
+
+          if (currentItem == 'serverVerificationSignWithContent' || currentItem == 'authorPublishMetaSpaceRequest') {
+            try {
+              result = signUtils[currentItem].generate(
+                JSON.parse(payload),
+                '', JSON.parse(payload)
+              );
+              setGenerateTextArea(JSON.stringify(result, null, 2));
+            } catch (error) {
+              console.log(error);
               toast.warning('Please check your privateKey, publicKey. the u need generate authorDigest in authorDigest menu.')
             }
           }
