@@ -7,6 +7,7 @@ import ShowItem from "./ShowItem";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import MetaSignGeneratorArea from './MetaSignGeneratorArea';
+import Footer from "./footer";
 
 const MetaSignGenerator = () => {
 
@@ -117,8 +118,10 @@ const MetaSignGenerator = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     </div>
+
   </div >;
 };
 
