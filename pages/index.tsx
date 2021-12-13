@@ -31,18 +31,18 @@ const Home: NextPage = () => {
             </span>
           </h1>
 
-          <div className="mt-8 text-sm text-white font-thin flex flex-col space-y-2 w-full">
+          <div className="mt-8 text-sm text-white font-thin flex flex-col space-y-4 w-full">
             <Link href="#verify" >
               <div className="w-full bg-purple-800 text-center hover:bg-purple-700 cursor-pointer py-2 rounded ">
                 🔎 VERIFY META!
               </div>
             </Link>
 
-            {/* <Link href="#verify" >
+            <Link href="/generator" >
               <div className="w-full bg-purple-800 text-center hover:bg-purple-700 cursor-pointer py-2 rounded ">
-                🔧 TOOL CHAIN
+                🔧 GENERATOR
               </div>
-            </Link> */}
+            </Link>
 
           </div>
         </div>
