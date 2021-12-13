@@ -7,6 +7,7 @@ import Link from 'next/link'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from '../components/footer';
 
 const Home: NextPage = () => {
 
@@ -15,8 +16,8 @@ const Home: NextPage = () => {
   const [hash, setHash] = useState('');
 
   return (
-    <div style={{ scrollBehavior: 'smooth' }}>
-      <div className="h-screen flex flex-row items-center justify-center bg-purple-900 w-full">
+    <div style={{ scrollBehavior: 'smooth' }} className=''>
+      <div className="h-screen flex flex-row items-center justify-center bg-purple-900 w-full ">
         <Head>
           <title>Data viewer | Meta Network</title>
           <meta name="description" content="meta-network-data-viewer" />
@@ -47,10 +48,10 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
-      <div className="py-10 w-full bg-purple-900">
+      <div className="py-10 w-full bg-purple-900 ">
 
       </div>
-      <div className="py-10 w-full bg-purple-200" id="verify">
+      <div className="py-10 w-full bg-purple-200 px-2 md:px-0" id="verify">
         <div className=" -mt-28 mx-auto max-w-2xl bg-white py-8 px-2 sm:px-8 rounded-none sm:rounded font-thin shadow-2xl">
           <h2 className="text-2xl text-purple-900">VERIFY META 🚀</h2>
           <div className="flex flex-col md:flex-row space-x-0 md:space-x-1 mt-6 items-end">
@@ -74,7 +75,12 @@ const Home: NextPage = () => {
 
           </div>
         </div>
+        <div className='max-w-2xl mx-auto'>
+          <Footer />
+        </div>
+
       </div>
+
     </div >
   )
 }
