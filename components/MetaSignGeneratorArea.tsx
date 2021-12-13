@@ -27,7 +27,54 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
     },
     authorDigestSign: {
       domain: 'metaspace.life'
-    }
+    },
+    authorMediaSign: {
+      title: "Remi's avatar",
+      categories: 'avatar',
+      cover:
+        'https://storageapi.fleek.co/andoroyur-team-bucket/metanetwork/users/metaio-storage/68253563.jpeg',
+      license: 'CC BY 4.0',
+      tags: 'remi,avatar',
+      platform: 'ipfs',
+      contentType: 'image/jpeg',
+      platformHash: 'QmTYKshXksysKCuC4R4AaSuvUz4TyHf6UEgT676Y6Gni9r',
+    },
+    metaNetworkGridsServerSign: [
+      {
+        id: 1,
+        siteName: '',
+        x: 0,
+        y: 11,
+        z: -11,
+        userId: 14,
+        username: 'andoroyur',
+        userNickname: 'BenBen43 🌟',
+        userBio: '中文介绍123',
+        userAvatar: 'https://metaspace.federarks.xyz/images/logo2.png',
+        subdomain: 'andoroyur19.metaspaces.life',
+        metaSpaceSiteId: 114,
+        metaSpaceSiteUrl: 'https://andoroyur19.metaspaces.life',
+        metaSpaceSiteProofUrl: '',
+        inviterUserId: 0,
+      },
+      {
+        id: 5,
+        siteName: '',
+        x: 0,
+        y: 12,
+        z: -12,
+        userId: 33,
+        username: '',
+        userNickname: '',
+        userBio: '',
+        userAvatar: 'https://i.loli.net/2021/05/13/CiEFPgWJzuk5prZ.png',
+        subdomain: '',
+        metaSpaceSiteId: 0,
+        metaSpaceSiteUrl: '',
+        metaSpaceSiteProofUrl: '',
+        inviterUserId: 0,
+      },
+    ]
 
   }
 
@@ -39,7 +86,7 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
   const [authorDigest, setAuthorDigest] = useState<string>('');
 
   useEffect(() => {
-    setPayload(JSON.stringify(payloadExample[currentItem] || {}, null, 2));
+    setPayload(JSON.stringify(payloadExample[currentItem] || { "message": "no test unit." }, null, 2));
     setGenerateTextArea('');
     setVerifyTextArea('');
   }, [currentItem])
@@ -48,7 +95,6 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
     resultForm = <>Help!!</>;
   } else {
     resultForm = <div>
-      <ToastContainer />
       {authorDigest.length > 0 ? <div className="my-4">
         <ShowItem title="AuthorDigst" content={authorDigest} />
         <button
@@ -82,6 +128,30 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
                 authorDigest);
               setGenerateTextArea(JSON.stringify(result, null, 2));
             } catch (e) {
+              toast.warning('Please check your privateKey, publicKey. the u need generate authorDigest in authorDigest menu.')
+            }
+          }
+
+          if (currentItem == 'authorMediaSign') {
+            try {
+              result = signUtils[currentItem].generate(
+                { private: privateKey, public: publicKey },
+                'metaspace.life',
+                JSON.parse(payload));
+              setGenerateTextArea(JSON.stringify(result, null, 2));
+            } catch (error) {
+              toast.warning('Please check your privateKey, publicKey. the u need generate authorDigest in authorDigest menu.')
+            }
+          }
+
+          if (currentItem == 'metaNetworkGridsServerSign') {
+            try {
+              result = signUtils[currentItem].generate(
+                { private: privateKey, public: publicKey },
+                'metaspace.life',
+                JSON.parse(payload));
+              setGenerateTextArea(JSON.stringify(result, null, 2));
+            } catch (error) {
               toast.warning('Please check your privateKey, publicKey. the u need generate authorDigest in authorDigest menu.')
             }
           }
