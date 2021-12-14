@@ -26,6 +26,17 @@ const MetaSignGenerator = () => {
     setPublicKey(keys.public);
   }
 
+  const saveKeys = async (content: string, filename: string) => {
+    if (document && window) {
+      const blobUrl = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `${filename}.txt`;
+      a.click();
+      window.URL.revokeObjectURL(blobUrl);
+    }
+  }
+
 
   useEffect(() => {
     if (window) {
@@ -68,7 +79,9 @@ const MetaSignGenerator = () => {
               className="my-2 btn btn-sm font-thin w-full bg-purple-500 border-0 hover:bg-purple-400" >Generate Prvate keys and public keys</button>
             {
               seed.length > 0 ? <div className="my-2">
-                <div className="text-sm font-thin">Seeds</div>
+                <div className="text-sm font-thin">Seeds <span onClick={() => {
+                  saveKeys(seed, 'seed')
+                }} className="ml-2 text-xs underline cursor-pointer">download</span></div>
                 <div className="text-xs rounded-lg bg-purple-100 py-1 px-2 break-all">
                   {seed}
                 </div></div> : <></>
@@ -76,7 +89,9 @@ const MetaSignGenerator = () => {
 
             {
               publicKey.length > 0 ? <div className="my-2">
-                <div className="text-sm font-thin">Public key</div>
+                <div className="text-sm font-thin">Public key <span onClick={() => {
+                  saveKeys(publicKey, 'public-key')
+                }} className="ml-2 text-xs underline cursor-pointer">download</span></div>
                 <div className="text-xs rounded-lg bg-purple-100 py-1 px-2">
                   {publicKey}
                 </div></div> : <></>
@@ -84,10 +99,14 @@ const MetaSignGenerator = () => {
 
             {
               privateKey.length > 0 ? <div className="my-2">
-                <div className="text-sm font-thin">Private key</div>
+                <div className="text-sm font-thin">Private key <span onClick={() => {
+                  saveKeys(privateKey, 'private-key')
+                }} className="ml-2 text-xs underline cursor-pointer">download</span></div>
                 <div className="text-xs rounded-lg bg-purple-100 py-1 px-2 ">
                   {privateKey}
-                </div></div> : <></>
+                </div>
+
+              </div> : <></>
             }
 
           </div>
