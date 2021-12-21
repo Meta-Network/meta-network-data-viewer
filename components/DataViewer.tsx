@@ -16,6 +16,7 @@ import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/ar
 import ShowItem from './ShowItem';
 import DataSourceContext from '../utils/dataSource';
 import ViewerFooter from './ViewerFooter';
+import { getCidTimeInfo } from '../services/IPFSCidTimeInfoMapping';
 
 const md = require('markdown-it')().use(require('markdown-it-plantuml'));
 
@@ -88,6 +89,17 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     setBlockTimestamp(timestamp * 1000);
   }, [setBlockNumber, setBlockTimestamp]);
 
+  const getIPFSTimeInfo = async () => {
+    if (!options.id) return;
+
+    const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
+    console.log({ timestamp, blockNumber }, 'IPFS time info');
+    setBlockNumber(Number(blockNumber));
+    setBlockTimestamp(Number(timestamp) * 1000);
+
+
+  }
+
   useEffect(() => {
     (id && dataSource) ? getMetadata() : null;
   }, [id, dataSource, getMetadata]);
@@ -98,6 +110,11 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
     if (options.platform === 'arweave') {
       getArweaveTxnStatus();
+    }
+
+    if (options.platform === 'ipfs') {
+      console.log(`start getIPFSTimeInfo`);
+      getIPFSTimeInfo();
     }
 
   }, [options]);
@@ -165,6 +182,27 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
                   />
                 </div> : <></>
               }
+              {
+                options.platform == 'ipfs' && blockNumber > 0 ? <div className="mt-8">
+                  <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
+                  <ShowItem
+                    title="Block"
+                    content={blockNumber.toString()}
+                  />
+                  <ShowItem
+                    title="Timestamp"
+                    content={new Date(blockTimestamp).toLocaleString()}
+                  />
+                </div> : (options.platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
+                  <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
+                  <ShowItem
+                    title="Time infomation"
+                    content={'not found, no result'}
+                  />
+                </div> : <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div>)
+              }
+
+
             </div>
             <div className="break-all">
               {
