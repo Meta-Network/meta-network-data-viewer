@@ -17,7 +17,6 @@ export const contract = new ethers.Contract('0x026b243892dd9cdda1b1689a65870f400
 export const getCidTimeInfo = async (cid: string) => {
   const cidTimeInfo = await contract.cidTimeInfoMapping(cid);
   const { timestamp, blockNumber } = cidTimeInfo;
-  console.log({ timestamp, blockNumber }, `cidTimeInfo found!`);
   return {
     timestamp: ethers.utils.formatUnits(timestamp, 0),
     blockNumber: ethers.utils.formatUnits(blockNumber, 0)

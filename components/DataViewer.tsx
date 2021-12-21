@@ -91,13 +91,9 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   const getIPFSTimeInfo = async () => {
     if (!options.id) return;
-
     const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
-    console.log({ timestamp, blockNumber }, 'IPFS time info');
     setBlockNumber(Number(blockNumber));
     setBlockTimestamp(Number(timestamp) * 1000);
-
-
   }
 
   useEffect(() => {
@@ -113,7 +109,6 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     }
 
     if (options.platform === 'ipfs') {
-      console.log(`start getIPFSTimeInfo`);
       getIPFSTimeInfo();
     }
 
