@@ -8,20 +8,24 @@ import { ethers } from "ethers";
  * NEXT_PUBLIC_ETH_NETWORK
  * NEXT_PUBLIC_ETH_CHAIN_ID
  * NEXT_PUBLIC_MAPPING_CONTRACT
+ * NEXT_PUBLIC_SCAN
  */
 
-const rinkebyChian = {
+export const chainInfo = {
   rpc: process.env.NEXT_PUBLIC_ETH_RPC || 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
   name: process.env.NEXT_PUBLIC_ETH_NETWORK || 'rinkeby',
   chainId: Number(process.env.NEXT_PUBLIC_ETH_CHAIN_ID) > 0 ? Number(process.env.NEXT_PUBLIC_ETH_CHAIN_ID) : 4,
+  scan: process.env.NEXT_PUBLIC_SCAN || "https://rinkeby.etherscan.io/",
 }
 
-const provider = new ethers.providers.JsonRpcProvider(rinkebyChian.rpc, {
-  name: rinkebyChian.name,
-  chainId: Number(rinkebyChian.chainId),
+export const IPFSCidTimeInfoMappingContractAddress = process.env.NEXT_PUBLIC_MAPPING_CONTRACT || '0x026b243892dd9cdda1b1689a65870f400a8be3b6';
+
+const provider = new ethers.providers.JsonRpcProvider(chainInfo.rpc, {
+  name: chainInfo.name,
+  chainId: Number(chainInfo.chainId),
 })
 
-export const contract = new ethers.Contract(process.env.NEXT_PUBLIC_MAPPING_CONTRACT || '0x026b243892dd9cdda1b1689a65870f400a8be3b6', IPFSCidTimeInfoMapping, provider);
+export const contract = new ethers.Contract(IPFSCidTimeInfoMappingContractAddress, IPFSCidTimeInfoMapping, provider);
 
 export const getCidTimeInfo = async (cid: string) => {
   const cidTimeInfo = await contract.cidTimeInfoMapping(cid);
