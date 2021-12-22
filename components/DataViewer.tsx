@@ -16,7 +16,7 @@ import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/ar
 import ShowItem from './ShowItem';
 import DataSourceContext from '../utils/dataSource';
 import ViewerFooter from './ViewerFooter';
-import { getCidTimeInfo } from '../services/IPFSCidTimeInfoMapping';
+import { getCidTimeInfo, IPFSCidTimeInfoMappingContractAddress, chainInfo, getTxnHashByCidAndBlockNumberFromRPC } from '../services/IPFSCidTimeInfoMapping';
 
 const md = require('markdown-it')().use(require('markdown-it-plantuml'));
 
@@ -49,6 +49,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const [metadata, setMetadata] = useState<TMetadataType | MetadataType>({ status: 'fetching...' } as any);
   const [blockNumber, setBlockNumber] = useState<Number>(null);
   const [blockTimestamp, setBlockTimestamp] = useState<number>(0);
+  const [remark, setRemark] = useState({});
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
   const getMetadata = useCallback(async () => {
@@ -91,13 +92,24 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   const getIPFSTimeInfo = async () => {
     if (!options.id) return;
+    try {
+      const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
+      setBlockNumber(Number(blockNumber));
+      setBlockTimestamp(Number(timestamp) * 1000);
+      const hash = await getTxnHashByCidAndBlockNumberFromRPC(options.id, Number(blockNumber));
 
-    const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
-    console.log({ timestamp, blockNumber }, 'IPFS time info');
-    setBlockNumber(Number(blockNumber));
-    setBlockTimestamp(Number(timestamp) * 1000);
-
-
+      setRemark({
+        hash: {
+          title: "Txn hash",
+          content: hash,
+          url: `${chainInfo.scan}tx/${hash}`,
+          urlTitle: `${chainInfo.name} explorer`,
+          type: 'time'
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -113,7 +125,6 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     }
 
     if (options.platform === 'ipfs') {
-      console.log(`start getIPFSTimeInfo`);
       getIPFSTimeInfo();
     }
 
@@ -152,69 +163,86 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
             </div>
           </div>
-          <div className="w-full md:w-1/3 my-2">
-            <div>
-              {
-                (metadata as any).status == 'fetching...' ? <></> :
-                  <div> { /* init */}
-                    <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
+          {
+            (metadata as any).status == 'fetching...' ? <></> : <div className="w-full md:w-1/3 my-2">
+              <div>
+                {
+                  (metadata as any).status == 'fetching...' ? <></> :
+                    <div> { /* init */}
+                      <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
+                      {
+                        verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
+                          Verify server metadata signature success.
+                        </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
+                          Verify server metadata signature failure.
+                        </div>
+                      }
+                    </div>
+                }
+                {
+                  options.platform == 'arweave' && blockNumber > 0 ? <div className="mt-8">
+                    <h2 className="font-thin text-2xl text-purple-700">Arweave</h2>
+                    <ShowItem
+                      title="Block"
+                      content={blockNumber.toString()}
+                      url={`https://viewblock.io/arweave/block/${blockNumber}`}
+                      urlTitle="viewblock.io"
+                    />
+                    <ShowItem
+                      title="Timestamp"
+                      content={new Date(blockTimestamp).toLocaleString()}
+                    />
+                  </div> : <></>
+                }
+                {
+                  options.platform == 'ipfs' && blockNumber > 0 ? <div className="mt-8">
+                    <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
+                    <ShowItem
+                      title="Block"
+                      content={blockNumber.toString()}
+                    />
+                    <ShowItem
+                      title="Timestamp"
+                      content={new Date(blockTimestamp).toLocaleString()}
+                    />
+                    <ShowItem
+                      title="Contract"
+                      content={IPFSCidTimeInfoMappingContractAddress}
+                      url={`${chainInfo.scan}address/${IPFSCidTimeInfoMappingContractAddress}`}
+                      urlTitle={`${chainInfo.name} explorer`}
+                    />
                     {
-                      verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
-                        Verify server metadata signature success.
-                      </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
-                        Verify server metadata signature failure.
-                      </div>
+                      remark && (remark as any).hash ? <ShowItem
+                        title="Txn hash"
+                        content={(remark as any).hash.content}
+                        url={(remark as any).hash.url}
+                        urlTitle={(remark as any).hash.urlTitle}
+                      /> : <></>
                     }
-                  </div>
-              }
-              {
-                options.platform == 'arweave' && blockNumber > 0 ? <div className="mt-8">
-                  <h2 className="font-thin text-2xl text-purple-700">Arweave</h2>
-                  <ShowItem
-                    title="Block"
-                    content={blockNumber.toString()}
-                    url={`https://viewblock.io/arweave/block/${blockNumber}`}
-                    urlTitle="viewblock.io"
-                  />
-                  <ShowItem
-                    title="Timestamp"
-                    content={new Date(blockTimestamp).toLocaleString()}
-                  />
-                </div> : <></>
-              }
-              {
-                options.platform == 'ipfs' && blockNumber > 0 ? <div className="mt-8">
-                  <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
-                  <ShowItem
-                    title="Block"
-                    content={blockNumber.toString()}
-                  />
-                  <ShowItem
-                    title="Timestamp"
-                    content={new Date(blockTimestamp).toLocaleString()}
-                  />
-                </div> : (options.platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
-                  <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
-                  <ShowItem
-                    title="Time infomation"
-                    content={'not found, no result'}
-                  />
-                </div> : <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div>)
-              }
+                  </div> : (options.platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
+                    <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
+                    <ShowItem
+                      title="Time infomation"
+                      content={'not found, no result'}
+                    />
+                  </div> : <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div>)
+                }
 
 
+              </div>
+              <div className="break-all">
+                {
+                  /**
+                   * show validations component for customers.
+                   */
+                  (verifyServerMetadataSignatureStatus) ? <>
+                    <CustomerValidations metadata={metadata as MetadataType} />
+                  </> : <></>
+                }
+              </div>
             </div>
-            <div className="break-all">
-              {
-                /**
-                 * show validations component for customers.
-                 */
-                (verifyServerMetadataSignatureStatus) ? <>
-                  <CustomerValidations metadata={metadata as MetadataType} />
-                </> : <></>
-              }
-            </div>
-          </div>
+          }
+
         </div>
         <div>
           {
@@ -247,7 +275,8 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
         </div>
         <ViewerFooter />
-      </main></DataSourceContext.Provider>
+      </main>
+    </DataSourceContext.Provider>
   </>;
 }
 
