@@ -92,20 +92,24 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   const getIPFSTimeInfo = async () => {
     if (!options.id) return;
-    const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
-    setBlockNumber(Number(blockNumber));
-    setBlockTimestamp(Number(timestamp) * 1000);
-    const hash = await getTxnHashByCidAndBlockNumberFromRPC(options.id, Number(blockNumber));
+    try {
+      const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
+      setBlockNumber(Number(blockNumber));
+      setBlockTimestamp(Number(timestamp) * 1000);
+      const hash = await getTxnHashByCidAndBlockNumberFromRPC(options.id, Number(blockNumber));
 
-    setRemark({
-      hash: {
-        title: "Txn hash",
-        content: hash,
-        url: `${chainInfo.scan}tx/${hash}`,
-        urlTitle: `${chainInfo.name} explorer`,
-        type: 'time'
-      }
-    });
+      setRemark({
+        hash: {
+          title: "Txn hash",
+          content: hash,
+          url: `${chainInfo.scan}tx/${hash}`,
+          urlTitle: `${chainInfo.name} explorer`,
+          type: 'time'
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
