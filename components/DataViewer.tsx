@@ -147,69 +147,72 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
             </div>
           </div>
-          <div className="w-full md:w-1/3 my-2">
-            <div>
-              {
-                (metadata as any).status == 'fetching...' ? <></> :
-                  <div> { /* init */}
-                    <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
-                    {
-                      verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
-                        Verify server metadata signature success.
-                      </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
-                        Verify server metadata signature failure.
-                      </div>
-                    }
-                  </div>
-              }
-              {
-                options.platform == 'arweave' && blockNumber > 0 ? <div className="mt-8">
-                  <h2 className="font-thin text-2xl text-purple-700">Arweave</h2>
-                  <ShowItem
-                    title="Block"
-                    content={blockNumber.toString()}
-                    url={`https://viewblock.io/arweave/block/${blockNumber}`}
-                    urlTitle="viewblock.io"
-                  />
-                  <ShowItem
-                    title="Timestamp"
-                    content={new Date(blockTimestamp).toLocaleString()}
-                  />
-                </div> : <></>
-              }
-              {
-                options.platform == 'ipfs' && blockNumber > 0 ? <div className="mt-8">
-                  <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
-                  <ShowItem
-                    title="Block"
-                    content={blockNumber.toString()}
-                  />
-                  <ShowItem
-                    title="Timestamp"
-                    content={new Date(blockTimestamp).toLocaleString()}
-                  />
-                </div> : (options.platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
-                  <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
-                  <ShowItem
-                    title="Time infomation"
-                    content={'not found, no result'}
-                  />
-                </div> : <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div>)
-              }
+          {
+            (metadata as any).status == 'fetching...' ? <></> : <div className="w-full md:w-1/3 my-2">
+              <div>
+                {
+                  (metadata as any).status == 'fetching...' ? <></> :
+                    <div> { /* init */}
+                      <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
+                      {
+                        verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
+                          Verify server metadata signature success.
+                        </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
+                          Verify server metadata signature failure.
+                        </div>
+                      }
+                    </div>
+                }
+                {
+                  options.platform == 'arweave' && blockNumber > 0 ? <div className="mt-8">
+                    <h2 className="font-thin text-2xl text-purple-700">Arweave</h2>
+                    <ShowItem
+                      title="Block"
+                      content={blockNumber.toString()}
+                      url={`https://viewblock.io/arweave/block/${blockNumber}`}
+                      urlTitle="viewblock.io"
+                    />
+                    <ShowItem
+                      title="Timestamp"
+                      content={new Date(blockTimestamp).toLocaleString()}
+                    />
+                  </div> : <></>
+                }
+                {
+                  options.platform == 'ipfs' && blockNumber > 0 ? <div className="mt-8">
+                    <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
+                    <ShowItem
+                      title="Block"
+                      content={blockNumber.toString()}
+                    />
+                    <ShowItem
+                      title="Timestamp"
+                      content={new Date(blockTimestamp).toLocaleString()}
+                    />
+                  </div> : (options.platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
+                    <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
+                    <ShowItem
+                      title="Time infomation"
+                      content={'not found, no result'}
+                    />
+                  </div> : <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div>)
+                }
 
 
+              </div>
+              <div className="break-all">
+                {
+                  /**
+                   * show validations component for customers.
+                   */
+                  (verifyServerMetadataSignatureStatus) ? <>
+                    <CustomerValidations metadata={metadata as MetadataType} />
+                  </> : <></>
+                }
+              </div>
             </div>
-            <div className="break-all">
-              {
-                /**
-                 * show validations component for customers.
-                 */
-                (verifyServerMetadataSignatureStatus) ? <>
-                  <CustomerValidations metadata={metadata as MetadataType} />
-                </> : <></>
-              }
-            </div>
-          </div>
+          }
+
         </div>
         <div>
           {
