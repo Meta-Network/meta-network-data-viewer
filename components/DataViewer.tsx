@@ -225,7 +225,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
                       title="Time infomation"
                       content={'not found, no result'}
                     />
-                  </div> : <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div>)
+                  </div> : options.platform == 'ipfs' ? <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div> : <></>)
                 }
 
 
