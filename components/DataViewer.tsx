@@ -16,7 +16,7 @@ import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/ar
 import ShowItem from './ShowItem';
 import DataSourceContext from '../utils/dataSource';
 import ViewerFooter from './ViewerFooter';
-import { getCidTimeInfo } from '../services/IPFSCidTimeInfoMapping';
+import { getCidTimeInfo, IPFSCidTimeInfoMappingContractAddress, chainInfo, getTxnHashByCidAndBlockNumberFromRPC } from '../services/IPFSCidTimeInfoMapping';
 
 const md = require('markdown-it')().use(require('markdown-it-plantuml'));
 
@@ -49,6 +49,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const [metadata, setMetadata] = useState<TMetadataType | MetadataType>({ status: 'fetching...' } as any);
   const [blockNumber, setBlockNumber] = useState<Number>(null);
   const [blockTimestamp, setBlockTimestamp] = useState<number>(0);
+  const [remark, setRemark] = useState({});
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
   const getMetadata = useCallback(async () => {
@@ -94,6 +95,17 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
     setBlockNumber(Number(blockNumber));
     setBlockTimestamp(Number(timestamp) * 1000);
+    const hash = await getTxnHashByCidAndBlockNumberFromRPC(options.id, Number(blockNumber));
+
+    setRemark({
+      hash: {
+        title: "Txn hash",
+        content: hash,
+        url: `${chainInfo.scan}tx/${hash}`,
+        urlTitle: `${chainInfo.name} explorer`,
+        type: 'time'
+      }
+    });
   }
 
   useEffect(() => {
@@ -189,6 +201,20 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
                       title="Timestamp"
                       content={new Date(blockTimestamp).toLocaleString()}
                     />
+                    <ShowItem
+                      title="Contract"
+                      content={IPFSCidTimeInfoMappingContractAddress}
+                      url={`${chainInfo.scan}address/${IPFSCidTimeInfoMappingContractAddress}`}
+                      urlTitle={`${chainInfo.name} explorer`}
+                    />
+                    {
+                      remark && (remark as any).hash ? <ShowItem
+                        title="Txn hash"
+                        content={(remark as any).hash.content}
+                        url={(remark as any).hash.url}
+                        urlTitle={(remark as any).hash.urlTitle}
+                      /> : <></>
+                    }
                   </div> : (options.platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
                     <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
                     <ShowItem
@@ -245,7 +271,8 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
         </div>
         <ViewerFooter />
-      </main></DataSourceContext.Provider>
+      </main>
+    </DataSourceContext.Provider>
   </>;
 }
 
