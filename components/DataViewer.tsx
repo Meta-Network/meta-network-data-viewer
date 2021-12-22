@@ -82,13 +82,14 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     }
   }, [id, dataSource, options]);
 
-  const getArweaveTxnStatus = useCallback(async () => {
+  const getArweaveTxnStatus = async () => {
     if (!options.id) return;
     const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
     const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
     setBlockNumber(block_height);
     setBlockTimestamp(timestamp * 1000);
-  }, [setBlockNumber, setBlockTimestamp]);
+
+  }
 
   const getIPFSTimeInfo = async () => {
     if (!options.id) return;
