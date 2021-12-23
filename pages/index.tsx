@@ -33,13 +33,13 @@ const Home: NextPage = () => {
           </h1>
 
           <div className="mt-8 text-sm text-white font-thin flex flex-col space-y-4 w-full">
-            <Link href="#verify" >
+            <Link href="#verify" passHref >
               <div className="w-full bg-purple-800 text-center hover:bg-purple-700 cursor-pointer py-2 rounded ">
                 🔎 VERIFY META!
               </div>
             </Link>
 
-            <Link href="/generator" >
+            <Link href="/generator" passHref>
               <div className="w-full bg-purple-800 text-center hover:bg-purple-700 cursor-pointer py-2 rounded ">
                 🔧 GENERATOR
               </div>

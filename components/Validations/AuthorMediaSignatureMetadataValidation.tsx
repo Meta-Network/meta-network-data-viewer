@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { VerifyStatus } from '../../utils/status';
 import VerifyResult from '../VerifyResult';
 import ShowItem from '../ShowItem';
-// import Image from 'next/image';
+import Image from 'next/image';
 import DataSourceContext from '../../utils/dataSource'
 import { AuthorMediaSignatureMetadata, authorMediaSign } from '@metaio/meta-signature-util';
 import platformSourceList from '../../utils/source';
@@ -31,8 +31,7 @@ const AuthorMediaSignatureMetadataValidation = (props: ValidatioProps) => {
     if (platform !== mediaDataPlatform) {
       setCustomerSource(platformSourceList[mediaDataPlatform][0]);
     }
-
-  }, [])
+  }, [mediaDataPlatform, platform]);
 
   return <div className="mt-8">
     <h2 className="font-thin text-2xl text-purple-700">Digest and validation</h2>

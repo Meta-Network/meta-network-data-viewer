@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ShowItem from "./ShowItem";
@@ -15,7 +15,7 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
 
   const { currentItem, privateKey, publicKey } = props;
 
-  const payloadExample = {
+  const payloadExample = useMemo(() => ({
     authorDigest: {
       title: 'One testing post',
       categories: 'Meta Network,Testing',
@@ -108,7 +108,7 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
     }
 
 
-  }
+  }), [])
 
   let resultForm = <></>;
   const [generateTextArea, setGenerateTextArea] = useState<string>('');
@@ -121,7 +121,7 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
     setPayload(JSON.stringify(payloadExample[currentItem] || { "message": "no test unit." }, null, 2));
     setGenerateTextArea('');
     setVerifyTextArea('');
-  }, [currentItem])
+  }, [currentItem, payloadExample])
 
   if (currentItem.toLowerCase() == 'help') {
     resultForm = <>

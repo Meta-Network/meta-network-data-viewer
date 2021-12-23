@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { MetadataPlatform, PlatformIdName, PlatformSourceName } from '../utils/types';
 import {
   BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata,
@@ -82,16 +82,15 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     }
   }, [id, dataSource, options]);
 
-  const getArweaveTxnStatus = async () => {
+  const getArweaveTxnStatus = useCallback(async () => {
     if (!options.id) return;
     const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
     const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
     setBlockNumber(block_height);
     setBlockTimestamp(timestamp * 1000);
+  }, [options.id, setBlockNumber, setBlockTimestamp]);
 
-  }
-
-  const getIPFSTimeInfo = async () => {
+  const getIPFSTimeInfo = useCallback(async () => {
     if (!options.id) return;
     try {
       const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
@@ -111,7 +110,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     } catch (error) {
       console.log(error);
     }
-  }
+  }, [options.id, setBlockNumber, setBlockTimestamp, setRemark]);
 
   useEffect(() => {
     (id && dataSource) ? getMetadata() : null;
@@ -129,7 +128,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
       getIPFSTimeInfo();
     }
 
-  }, [options]);
+  }, [options, getArweaveTxnStatus, getIPFSTimeInfo]);
 
   // const renderData = (content: string) => content.replaceAll('```plantuml\n@startuml', '\n@startuml').replaceAll('@enduml\n```', '@enduml\n');
 
