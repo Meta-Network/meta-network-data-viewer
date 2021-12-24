@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import arweaveNodeList from '../../arweave-node.json';
-import DataViewer from '../../components/DataViewer';
+// import DataViewer from '../../components/DataViewer';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+const DataViewer = dynamic(() => import('../../components/DataViewer'));
 
 const ArweaveViewer: any = (props) => {
 
