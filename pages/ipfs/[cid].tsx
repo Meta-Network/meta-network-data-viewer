@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import ipfsGatewayList from '../../ipfs-gateway.json';
-import DataViewer from '../../components/DataViewer';
+// import DataViewer from '../../components/DataViewer';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+const DataViewer = dynamic(() => import('../../components/DataViewer'));
 
 const IPFSViewer: any = () => {
 
