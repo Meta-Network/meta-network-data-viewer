@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@metaio/meta-signature-util": "^0.6.0",
@@ -16,7 +17,7 @@
     "daisyui": "^1.16.2",
     "ethers": "^5.5.2",
     "html-react": "^0.0.18",
-    "next": "12.0.2",
+    "next": "latest",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-json-view": "^1.21.3",
@@ -24,16 +25,24 @@
     "ts-node": "^10.4.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "13.5.0",
     "@types/node": "16.11.6",
     "@types/react": "17.0.33",
     "autoprefixer": "^10.4.0",
+    "babel-jest": "^27.4.5",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.2",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.4.5",
     "markdown-it": "^12.2.0",
     "markdown-it-plantuml": "^1.4.1",
     "postcss": "^8.3.11",
     "react-render-html": "^0.6.0",
+    "react-test-renderer": "^17.0.2",
     "tailwindcss": "^2.2.19",
-    "typescript": "4.4.4"
+    "typescript": "4.4.4",
+    "eslint-plugin-testing-library": "5.0.1"
   }
 }
