@@ -41,18 +41,11 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
     </>;
   } else {
     resultForm = <div>
-      {authorDigest.length > 0 ? <div className="my-4">
-        <ShowItem title="AuthorDigst" content={authorDigest} />
-        <button
-          onClick={() => { setAuthorDigest('') }}
-          className="btn btn-sm font-thin w-full bg-purple-500 border-0 hover:bg-purple-400">clear</button>
-      </div> : <></>}
-
       <h3 className="p-0 m-0 font-bold text-xs text-purple-500">Payload</h3>
       <textarea
         value={payload}
         onChange={(e) => setPayload(e.target.value)}
-        name="" id="" className="mt-1 border border-purple-200 w-full rounded-lg p-2 h-40">
+        name="" id="" className="mt-1 border border-purple-200 w-full rounded p-2 h-40">
       </textarea>
       <h3 className="p-0 m-0 font-bold text-xs text-purple-500">Generate function</h3>
       <button
@@ -129,11 +122,17 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
           }
 
         }}
-        className="btn btn-sm font-thin w-full bg-purple-500 border-0 hover:bg-purple-400">GENERATE</button>
+        className="btn btn-sm font-thin rounded w-full bg-purple-500 border-0 hover:bg-purple-400">GENERATE</button>
+      {authorDigest.length > 0 ? <div className="my-4">
+        <ShowItem title="AuthorDigst" content={authorDigest} />
+        <button
+          onClick={() => { setAuthorDigest('') }}
+          className="btn btn-sm btn-outline font-thin rounded w-full bg-white border-purple-500 hover:bg-purple-500 hover:border-purple-500 text-purple-500 hover:text-white ">clear</button>
+      </div> : <></>}
       <textarea
         value={generateTextArea}
         onChange={(e) => setGenerateTextArea(e.target.value)}
-        name="" id="" className="mt-1 border border-purple-200 w-full rounded-lg p-2 h-40">
+        name="" id="" className="mt-1 border border-purple-200 w-full rounded p-2 h-40">
       </textarea>
       <h3 className="p-0 m-0 font-bold text-xs mt-4 text-purple-500">Verify function</h3>
 
@@ -146,7 +145,7 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
             toast.warning('Verify failed');
           }
         }}
-        className="btn btn-sm font-thin w-full bg-purple-500 border-0 hover:bg-purple-400">VERIFY</button>
+        className="btn btn-sm font-thin rounded w-full bg-purple-500 border-0 hover:bg-purple-400">VERIFY</button>
     </div>
   }
   return resultForm;
