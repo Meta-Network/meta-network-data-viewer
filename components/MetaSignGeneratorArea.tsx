@@ -122,7 +122,7 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
           }
 
         }}
-        className="btn btn-sm font-thin rounded w-full bg-purple-500 border-0 hover:bg-purple-400">GENERATE</button>
+        className="btn btn-sm btn-outline font-thin rounded w-full bg-white border-purple-500 hover:bg-purple-500 hover:border-purple-500 text-purple-500 hover:text-white ">GENERATE</button>
       {authorDigest.length > 0 ? <div className="my-4">
         <ShowItem title="AuthorDigst" content={authorDigest} />
         <button
@@ -134,18 +134,20 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
         onChange={(e) => setGenerateTextArea(e.target.value)}
         name="" id="" className="mt-1 border border-purple-200 w-full rounded p-2 h-40">
       </textarea>
-      <h3 className="p-0 m-0 font-bold text-xs mt-4 text-purple-500">Verify function</h3>
+      {
+        generateTextArea.length > 0 ? <> <h3 className="p-0 m-0 font-bold text-xs mt-4 text-purple-500">Verify function</h3>
+          <button
+            onClick={() => {
+              try {
+                const result = signUtils[currentItem].verify(JSON.parse(generateTextArea));
+                result ? toast.success('Verify success') : toast.warning('Verify failed');
+              } catch (e) {
+                toast.warning('Verify failed');
+              }
+            }}
+            className="btn btn-sm font-thin rounded w-full bg-purple-500 border-0 hover:bg-purple-400">VERIFY</button> </> : <></>
+      }
 
-      <button
-        onClick={() => {
-          try {
-            const result = signUtils[currentItem].verify(JSON.parse(generateTextArea));
-            result ? toast.success('Verify success') : toast.warning('Verify failed');
-          } catch (e) {
-            toast.warning('Verify failed');
-          }
-        }}
-        className="btn btn-sm font-thin rounded w-full bg-purple-500 border-0 hover:bg-purple-400">VERIFY</button>
     </div>
   }
   return resultForm;
