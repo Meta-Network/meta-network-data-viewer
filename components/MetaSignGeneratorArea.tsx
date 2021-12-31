@@ -129,13 +129,14 @@ const MetaSignGeneratorArea = (props: GenratorAreaProps) => {
           onClick={() => { setAuthorDigest('') }}
           className="btn btn-sm btn-outline font-thin rounded w-full bg-white border-purple-500 hover:bg-purple-500 hover:border-purple-500 text-purple-500 hover:text-white ">clear</button>
       </div> : <></>}
-      <textarea
-        value={generateTextArea}
-        onChange={(e) => setGenerateTextArea(e.target.value)}
-        name="" id="" className="mt-1 border border-purple-200 w-full rounded p-2 h-40">
-      </textarea>
+
       {
-        generateTextArea.length > 0 ? <> <h3 className="p-0 m-0 font-bold text-xs mt-4 text-purple-500">Verify function</h3>
+        generateTextArea.length > 0 ? <> <textarea
+          value={generateTextArea}
+          onChange={(e) => setGenerateTextArea(e.target.value)}
+          name="" id="" className="mt-1 border border-purple-200 w-full rounded p-2 h-40">
+        </textarea>
+          <h3 className="p-0 m-0 font-bold text-xs mt-4 text-purple-500">Verify function</h3>
           <button
             onClick={() => {
               try {
