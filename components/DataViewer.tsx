@@ -16,6 +16,8 @@ import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/ar
 import ShowItem from './ShowItem';
 import DataSourceContext from '../utils/dataSource';
 import ViewerFooter from './ViewerFooter';
+import testPayloads from '../utils/testPayloads.json';
+import { getMetadata as getSourceCountent } from '../services/metadata';
 import { getCidTimeInfo, IPFSCidTimeInfoMappingContractAddress, chainInfo, getTxnHashByCidAndBlockNumberFromRPC } from '../services/IPFSCidTimeInfoMapping';
 
 const md = require('markdown-it')().use(require('markdown-it-plantuml'));
@@ -56,14 +58,13 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const getMetadata = useCallback(async () => {
     try {
 
-      let requestResult: any;
       let content: any
       let verifyStatus: boolean = false;
-      if (true) {
-        content = { "@context": "https://metanetwork.online/ns/grid", "@type": "meta-network-grids-server-sign", "@version": "1.0.0", "signatureAlgorithm": "curve25519", "publicKey": "0xbada4a41bc2f9a5629f22cf8660eb3bfb766713e10d4ba81a0082c327a38d857", "items": [{ "userId": 473, "subdomain": "team.metaspaces.me", "metaSpaceSiteId": 52, "metaSpaceSiteUrl": "https://team.metaspaces.me", "id": 461, "previousTx": "DqJEsYZxn0ZrW6U-2pI2EWs4PgdJw0zfxRI9GHGPAKA" }], "nonce": "0x6fbf493c195bc6e7261c472a", "claim": "I, metanetwork.online maintain grids for users, using the key: 0xbada4a41bc2f9a5629f22cf8660eb3bfb766713e10d4ba81a0082c327a38d857", "digest": "0xb28c94b2195c8ed259f0b415aaee3f39b0b2920a4537611499fa044956917a21", "signature": "0x8e0b8eb201c8617166bec26ba8b2086f9b253208ec156ad98be0506c1199412a97c4a2cf67292790b7dfa9c0e5b992aed6631d63b992498205965a61416d6486", "ts": 1640174400293, "previousBatchTx": "3mSGg3chcVI5m42ruHHYdUhfAFN1RZxMMVyOOsbtsSg" }
+
+      if (options.isTest) {
+        content = testPayloads;
       } else {
-        requestResult = await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 1000 });
-        content = await (requestResult).data;
+        content = await getSourceCountent(dataSource, id, options.timeout || 1000);
       }
 
       if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
