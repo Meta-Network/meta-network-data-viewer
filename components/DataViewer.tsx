@@ -99,6 +99,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     if (!options.id) return;
     const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
     const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
+    console.log(block_height, block_indep_hash, timestamp);
     setBlockNumber(block_height);
     setBlockTimestamp(timestamp * 1000);
   }, [options.id, setBlockNumber, setBlockTimestamp]);
@@ -111,7 +112,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
       setBlockNumber(Number(blockNumber));
       setBlockTimestamp(Number(timestamp) * 1000);
       const hash = await getTxnHashByCidAndBlockNumberFromRPC(options.id, Number(blockNumber));
-
+      console.log(hash);
       setRemark({
         hash: {
           title: "Txn hash",
