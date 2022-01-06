@@ -1,28 +1,24 @@
-import { render, fireEvent, waitFor, screen } from '@testing-library/react'
+import { render, fireEvent, waitFor, screen, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import DataViewer from '../components/DataViewer';
 import arweaveNodeList from '../arweave-node.json';
 
-
 test('loads and displays greeting', async () => {
-  render(<DataViewer options={
-    {
-      platform: 'arweave',
-      id: 'ujEJk9ixgw1OmTSXqwlU8BEh-c7swBGDad6Q-QpaF5E',
-      idName: 'hash',
-      dataSourceName: 'Arweave Node Server',
-      dataSourceList: arweaveNodeList,
-      timeout: 20000,
-      isTest: true,
-    }
-  } />);
-
-  // await waitFor(() => screen.getByText('ujEJk9ixgw1OmTSXqwlU8BEh-c7swBGDad6Q-QpaF5E'));
+  await act(async () => {
+    render(<DataViewer options={
+      {
+        platform: 'arweave',
+        id: 'ujEJk9ixgw1OmTSXqwlU8BEh-c7swBGDad6Q-QpaF5E',
+        idName: 'hash',
+        dataSourceName: 'Arweave Node Server',
+        dataSourceList: arweaveNodeList,
+        timeout: 20000,
+        isTest: true,
+      }
+    } />);
+  })
   const result = screen.getByText("ujEJk9ixgw1OmTSXqwlU8BEh-c7swBGDad6Q-QpaF5E");
-  // expect(screen.getByText('836672')).toBeInTheDocument()
   expect(result).toBeInTheDocument();
-  // expect(screen.getByRole('heading')).toHaveTextContent('hello there')
-  // expect(screen.getByRole('button')).toBeDisabled()
 })
 
 

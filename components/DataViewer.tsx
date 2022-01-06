@@ -63,29 +63,33 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
       if (options.isTest) {
         content = testPayloads;
+        verifyStatus = true;
       } else {
         content = await getSourceCountent(dataSource, id, options.timeout || 1000);
+
+        if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
+          console.log('Verify Meta Network grids');
+          verifyStatus = metaNetworkGridsServerSign.verify(content as BatchGridActionsMetadata);
+        } else if ((content as AuthorMediaSignatureMetadata)['@type'] === 'author-media-sign') {
+          verifyStatus = authorMediaSign.verify(content as AuthorMediaSignatureMetadata);
+        } else {
+          console.log('Server Verification Sign.');
+          verifyStatus = serverVerificationSign.verify(content as BaseSignatureMetadata);
+        }
       }
 
-      if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
-        console.log('Verify Meta Network grids');
-        verifyStatus = metaNetworkGridsServerSign.verify(content as BatchGridActionsMetadata);
-      } else if ((content as AuthorMediaSignatureMetadata)['@type'] === 'author-media-sign') {
-        verifyStatus = authorMediaSign.verify(content as AuthorMediaSignatureMetadata);
-      } else {
-        console.log('Server Verification Sign.');
-        verifyStatus = serverVerificationSign.verify(content as BaseSignatureMetadata);
-      }
       console.log('verify result:', verifyStatus);
       setVerifyServerMetadataSignatureStatus(verifyStatus);
       setMetadata(content);
       // verifyStatus ? setMetadata(content) : toast.warning('Verify server metadata signature failure!');
     } catch (error) {
-      if (error.message.includes('Network Error')) {
-        toast.error('Please check your connection');
-      } else {
-        console.error(error)
-        toast.error('Something went wrong');
+      if (!options.isTest) {
+        if (error.message.includes('Network Error')) {
+          toast.error('Please check your connection');
+        } else {
+          console.error(error)
+          toast.error('Something went wrong');
+        }
       }
       setMetadata({ status: 'failure.' } as any)
     }
@@ -139,8 +143,6 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     }
 
   }, [options, getArweaveTxnStatus, getIPFSTimeInfo]);
-
-  // const renderData = (content: string) => content.replaceAll('```plantuml\n@startuml', '\n@startuml').replaceAll('@enduml\n```', '@enduml\n');
 
   return <>
     <DataSourceContext.Provider value={{ platform: props.options.platform, source: dataSource }}>
