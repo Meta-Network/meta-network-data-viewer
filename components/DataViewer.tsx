@@ -16,6 +16,8 @@ import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/ar
 import ShowItem from './ShowItem';
 import DataSourceContext from '../utils/dataSource';
 import ViewerFooter from './ViewerFooter';
+import testPayloads from '../utils/testPayloads.json';
+import { getMetadata as getSourceCountent } from '../services/metadata';
 import { getCidTimeInfo, IPFSCidTimeInfoMappingContractAddress, chainInfo, getTxnHashByCidAndBlockNumberFromRPC } from '../services/IPFSCidTimeInfoMapping';
 
 const md = require('markdown-it')().use(require('markdown-it-plantuml'));
@@ -30,6 +32,7 @@ interface IDataViewerProps {
     defaultDataSource?: string,
     defaultDataContent?: any,
     timeout?: number,
+    isTest?: boolean,
   }
 }
 
@@ -54,29 +57,39 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   const getMetadata = useCallback(async () => {
     try {
-      let verifyStatus: boolean = false;
-      const requestResult = await axios.get(`${dataSource.replace(':hash', id)}`, { timeout: options.timeout || 1000 });
 
-      const content: TMetadataType | MetadataType = await (requestResult).data;
-      if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
-        console.log('Verify Meta Network grids');
-        verifyStatus = metaNetworkGridsServerSign.verify(content as BatchGridActionsMetadata);
-      } else if ((content as AuthorMediaSignatureMetadata)['@type'] === 'author-media-sign') {
-        verifyStatus = authorMediaSign.verify(content as AuthorMediaSignatureMetadata);
+      let content: any
+      let verifyStatus: boolean = false;
+
+      if (options.isTest) {
+        content = testPayloads;
+        verifyStatus = true;
       } else {
-        console.log('Server Verification Sign.');
-        verifyStatus = serverVerificationSign.verify(content as BaseSignatureMetadata);
+        content = await getSourceCountent(dataSource, id, options.timeout || 1000);
+
+        if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
+          console.log('Verify Meta Network grids');
+          verifyStatus = metaNetworkGridsServerSign.verify(content as BatchGridActionsMetadata);
+        } else if ((content as AuthorMediaSignatureMetadata)['@type'] === 'author-media-sign') {
+          verifyStatus = authorMediaSign.verify(content as AuthorMediaSignatureMetadata);
+        } else {
+          console.log('Server Verification Sign.');
+          verifyStatus = serverVerificationSign.verify(content as BaseSignatureMetadata);
+        }
       }
+
       console.log('verify result:', verifyStatus);
       setVerifyServerMetadataSignatureStatus(verifyStatus);
       setMetadata(content);
-      verifyStatus ? setMetadata(content) : toast.warning('Verify server metadata signature failure!');
+      // verifyStatus ? setMetadata(content) : toast.warning('Verify server metadata signature failure!');
     } catch (error) {
-      if (error.message.includes('Network Error')) {
-        toast.error('Please check your connection');
-      } else {
-        console.error(error)
-        toast.error('Something went wrong');
+      if (!options.isTest) {
+        if (error.message.includes('Network Error')) {
+          toast.error('Please check your connection');
+        } else {
+          console.error(error)
+          toast.error('Something went wrong');
+        }
       }
       setMetadata({ status: 'failure.' } as any)
     }
@@ -86,18 +99,20 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     if (!options.id) return;
     const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
     const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
+    console.log(block_height, block_indep_hash, timestamp);
     setBlockNumber(block_height);
     setBlockTimestamp(timestamp * 1000);
   }, [options.id, setBlockNumber, setBlockTimestamp]);
 
   const getIPFSTimeInfo = useCallback(async () => {
+
     if (!options.id) return;
     try {
       const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
       setBlockNumber(Number(blockNumber));
       setBlockTimestamp(Number(timestamp) * 1000);
       const hash = await getTxnHashByCidAndBlockNumberFromRPC(options.id, Number(blockNumber));
-
+      console.log(hash);
       setRemark({
         hash: {
           title: "Txn hash",
@@ -119,7 +134,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   useEffect(() => {
     setId(options.id);
     setDataSource((options.defaultDataSource) || options.dataSourceList[0]);
-
+    if (options.isTest) return;
     if (options.platform === 'arweave') {
       getArweaveTxnStatus();
     }
@@ -129,8 +144,6 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     }
 
   }, [options, getArweaveTxnStatus, getIPFSTimeInfo]);
-
-  // const renderData = (content: string) => content.replaceAll('```plantuml\n@startuml', '\n@startuml').replaceAll('@enduml\n```', '@enduml\n');
 
   return <>
     <DataSourceContext.Provider value={{ platform: props.options.platform, source: dataSource }}>
