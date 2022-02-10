@@ -4,7 +4,7 @@ import {
   BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata,
   metaNetworkGridsServerSign, serverVerificationSign, AuthorMediaSignatureMetadata,
   authorMediaSign
-} from '@metaio/meta-signature-util';
+} from '../utils/MetaSignature';
 import { MetadataType } from '../utils/types'
 import dynamic from 'next/dynamic';
 import axios from 'axios';

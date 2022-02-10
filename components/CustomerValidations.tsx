@@ -1,4 +1,4 @@
-import { BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '@metaio/meta-signature-util';
+import { BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '../utils/MetaSignature';
 import { MetadataType } from '../utils/types';
 
 import SignatureMetadataValidation from './Validations/SignatureMetadataValidation';

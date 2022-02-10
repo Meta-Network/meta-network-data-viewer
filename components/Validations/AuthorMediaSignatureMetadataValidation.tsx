@@ -4,7 +4,7 @@ import VerifyResult from '../VerifyResult';
 import ShowItem from '../ShowItem';
 import Image from 'next/image';
 import DataSourceContext from '../../utils/dataSource'
-import { AuthorMediaSignatureMetadata, authorMediaSign } from '@metaio/meta-signature-util';
+import { AuthorMediaSignatureMetadata, authorMediaSign } from '../../utils/MetaSignature';
 import platformSourceList from '../../utils/source';
 
 type ValidatioProps = {
