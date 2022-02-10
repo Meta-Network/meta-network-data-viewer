@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AuthorDigestMetadata, authorPublishMetaSpaceRequest } from '@metaio/meta-signature-util';
+import { AuthorDigestMetadata, authorPublishMetaSpaceRequest } from '../../utils/MetaSignature';
 import { VerifyStatus } from '../../utils/status';
 import VerifyResult from '../VerifyResult';
 import ShowItem from '../ShowItem';

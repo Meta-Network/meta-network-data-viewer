@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BatchGridActionsMetadata, metaNetworkGridsServerSign } from '@metaio/meta-signature-util';
+import { BatchGridActionsMetadata, metaNetworkGridsServerSign } from '../../utils/MetaSignature';
 import { VerifyStatus } from '../../utils/status';
 import VerifyResult from '../VerifyResult';
 import ShowItem from '../ShowItem';

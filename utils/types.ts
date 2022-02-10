@@ -5,7 +5,7 @@ import {
   PostMetadata,
   BatchGridActionsMetadata,
   AuthorMediaSignatureMetadata
-} from '@metaio/meta-signature-util';
+} from './MetaSignature';
 
 export type MetadataPlatform = 'ipfs' | 'arweave' | null;
 export type PlatformIdName = 'hash' | 'HASH' | 'cid' | 'CID' | string;
