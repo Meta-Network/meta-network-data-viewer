@@ -11,7 +11,8 @@
     "cypress": "cypress open"
   },
   "dependencies": {
-    "@metaio/meta-signature-util": "^0.6.0",
+    "@metaio/meta-signature-util": "^0.9.0",
+    "@metaio/meta-signature-util-v2": "^2.3.0",
     "@tailwindcss/typography": "^0.4.1",
     "antd": "^4.17.3",
     "axios": "^0.24.0",
