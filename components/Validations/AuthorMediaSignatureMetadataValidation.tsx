@@ -3,11 +3,12 @@ import { VerifyStatus } from '../../utils/status';
 import VerifyResult from '../PageElements/VerifyResult';
 import ShowItem from '../PageElements/ShowItem';
 import DataSourceContext from '../../utils/dataSource';
-import { AuthorMediaSignatureMetadata, authorMediaSign } from '../../utils/metaSignature';
+import initMetaSignatureUtil, { AuthorMediaSignatureMetadata } from '../../utils/metaSignature';
 import platformSourceList from '../../utils/source';
 
 type ValidatioProps = {
-  metadata: AuthorMediaSignatureMetadata
+  metadata: AuthorMediaSignatureMetadata,
+  version?: number,
 }
 
 const AuthorMediaSignatureMetadataValidation = (props: ValidatioProps) => {
@@ -16,6 +17,7 @@ const AuthorMediaSignatureMetadataValidation = (props: ValidatioProps) => {
   const [customerMetaData, setCustomerMetaData] = useState<string>('');
 
   const [customerSource, setCustomerSource] = useState<string>('');
+  const { authorMediaSign } = initMetaSignatureUtil(props.version || 1);
 
   useEffect(() => {
     setVerifyStatus(VerifyStatus.Unverified);

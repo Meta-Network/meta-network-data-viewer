@@ -1,6 +1,6 @@
 import Head from "next/head";
-import * as signUtils from '@metaio/meta-signature-util';
-import * as utils from '@metaio/meta-signature-util/lib/utils';
+import * as signUtils from '@metaio/meta-signature-util-v2';
+import * as utils from '@metaio/meta-signature-util-v2/lib/utils';
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ToastContainer } from "react-toastify";

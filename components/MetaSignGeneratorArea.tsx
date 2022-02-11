@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ShowItem from "./PageElements/ShowItem";
-import * as signUtils from '@metaio/meta-signature-util';
+import * as signUtils from '@metaio/meta-signature-util-v2';
 import metaSignaturePayloads from '../utils/metaSignaturePayloads.json'
 
 type GenratorAreaProps = {
