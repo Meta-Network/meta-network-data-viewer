@@ -1,6 +1,7 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MetadataPlatform, PlatformIdName, PlatformSourceName } from '../utils/types';
 import initMetaSignatureUtil, {
+  MetadataVersion,
   BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata,
 } from '../utils/metaSignature';
 import { MetadataType } from '../utils/types'
@@ -42,7 +43,6 @@ interface IReference {
 function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   const { options } = props;
-
   const [id, setId] = useState('');
   const [dataSource, setDataSource] = useState('');
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
@@ -54,11 +54,8 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   const getMetadata = useCallback(async () => {
     try {
-
-
       let content: any
       let verifyStatus: boolean = false;
-
       if (options.isTest) {
         content = testPayloads;
         verifyStatus = true;
@@ -146,150 +143,152 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   }, [options, getArweaveTxnStatus, getIPFSTimeInfo]);
 
   return <>
-    <DataSourceContext.Provider value={{ platform: props.options.platform, source: dataSource }}>
-      <ToastContainer />
-      <main className="mx-auto max-w-6xl p-4">
-        <div className="w-full  flex flex-col md:flex-row md:space-x-2 ">
-          <div className="w-full md:w-2/3 my-2">
-            <h2 className="font-thin text-2xl text-purple-700">{options.idName}</h2>
-            <div className="w-full flex flex-col justify-center font-thin text-xs text-purple-700 bg-purple-100 px-2 rounded border border-purple-300 placeholder-purple-200 h-10 ">
-              {id}
-            </div>
-          </div>
-          <div className="w-full md:w-1/3 my-2">
-            <h2 className="font-thin text-2xl text-purple-700">Select {options.dataSourceName}.</h2>
-            <select value={dataSource} onChange={(e) => { setDataSource(e.target.value) }}
-              className="w-full font-thin p-2 rounded border text-purple-700 border-purple-300 placeholder-purple-200 h-10">
-              {options.dataSourceList.map((item: string, index) => {
-                return <option key={index} value={item}>{item.replace(':hash', '')}</option>
-              })}
-            </select>
-          </div>
-        </div>
-        <div className="my-2 mt-8 w-full flex flex-col md:flex-row md:space-x-2">
-          <div className="w-full md:w-2/3 my-2">
-            <h2 className="font-thin text-2xl text-purple-700">Origin Metadata</h2>
-            <div className="p-2 border border-purple-300 rounded mt-2 bg-purple-50">
-              <div className="overflow-auto ">
-                <DynamicReactJson src={metadata as BaseSignatureMetadata} displayDataTypes={false} defaultValue={{ ok: false }} name={false} />
+    <MetadataVersion.Provider value={{ metadataVersion: metadata['@version'] }} >
+      <DataSourceContext.Provider value={{ platform: props.options.platform, source: dataSource }}>
+        <ToastContainer />
+        <main className="mx-auto max-w-6xl p-4">
+          <div className="w-full  flex flex-col md:flex-row md:space-x-2 ">
+            <div className="w-full md:w-2/3 my-2">
+              <h2 className="font-thin text-2xl text-purple-700">{options.idName}</h2>
+              <div className="w-full flex flex-col justify-center font-thin text-xs text-purple-700 bg-purple-100 px-2 rounded border border-purple-300 placeholder-purple-200 h-10 ">
+                {id}
               </div>
-
+            </div>
+            <div className="w-full md:w-1/3 my-2">
+              <h2 className="font-thin text-2xl text-purple-700">Select {options.dataSourceName}.</h2>
+              <select value={dataSource} onChange={(e) => { setDataSource(e.target.value) }}
+                className="w-full font-thin p-2 rounded border text-purple-700 border-purple-300 placeholder-purple-200 h-10">
+                {options.dataSourceList.map((item: string, index) => {
+                  return <option key={index} value={item}>{item.replace(':hash', '')}</option>
+                })}
+              </select>
             </div>
           </div>
-          {
-            (metadata as any).status == 'fetching...' ? <></> : <div className="w-full md:w-1/3 my-2">
-              <div>
-                {
-                  (metadata as any).status == 'fetching...' ? <></> :
-                    <div> { /* init */}
-                      <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
+          <div className="my-2 mt-8 w-full flex flex-col md:flex-row md:space-x-2">
+            <div className="w-full md:w-2/3 my-2">
+              <h2 className="font-thin text-2xl text-purple-700">Origin Metadata</h2>
+              <div className="p-2 border border-purple-300 rounded mt-2 bg-purple-50">
+                <div className="overflow-auto ">
+                  <DynamicReactJson src={metadata as BaseSignatureMetadata} displayDataTypes={false} defaultValue={{ ok: false }} name={false} />
+                </div>
+
+              </div>
+            </div>
+            {
+              (metadata as any).status == 'fetching...' ? <></> : <div className="w-full md:w-1/3 my-2">
+                <div>
+                  {
+                    (metadata as any).status == 'fetching...' ? <></> :
+                      <div> { /* init */}
+                        <h2 className="font-thin text-2xl text-purple-700">Server metadata</h2>
+                        {
+                          verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
+                            Verify server metadata signature success.
+                          </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
+                            Verify server metadata signature failure.
+                          </div>
+                        }
+                      </div>
+                  }
+                  {
+                    options.platform == 'arweave' && blockNumber > 0 ? <div className="mt-8">
+                      <h2 className="font-thin text-2xl text-purple-700">Arweave</h2>
+                      <ShowItem
+                        title="Block"
+                        content={blockNumber.toString()}
+                        url={`https://viewblock.io/arweave/block/${blockNumber}`}
+                        urlTitle="viewblock.io"
+                      />
+                      <ShowItem
+                        title="Timestamp"
+                        content={new Date(blockTimestamp).toLocaleString()}
+                      />
+                    </div> : <></>
+                  }
+                  {
+                    options.platform == 'ipfs' && blockNumber > 0 ? <div className="mt-8">
+                      <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
+                      <ShowItem
+                        title="Block"
+                        content={blockNumber.toString()}
+                      />
+                      <ShowItem
+                        title="Timestamp"
+                        content={new Date(blockTimestamp).toLocaleString()}
+                      />
+                      <ShowItem
+                        title="Contract"
+                        content={IPFSCidTimeInfoMappingContractAddress}
+                        url={`${chainInfo.scan}address/${IPFSCidTimeInfoMappingContractAddress}`}
+                        urlTitle={`${chainInfo.name} explorer`}
+                      />
                       {
-                        verifyServerMetadataSignatureStatus ? <div className="my-2 p-4 animate-pulse bg-green-600 text-white rounded">
-                          Verify server metadata signature success.
-                        </div> : <div className="my-2 p-4 animate-pulse bg-red-600 text-white rounded">
-                          Verify server metadata signature failure.
-                        </div>
+                        remark && (remark as any).hash ? <ShowItem
+                          title="Txn hash"
+                          content={(remark as any).hash.content}
+                          url={(remark as any).hash.url}
+                          urlTitle={(remark as any).hash.urlTitle}
+                        /> : <></>
                       }
-                    </div>
-                }
-                {
-                  options.platform == 'arweave' && blockNumber > 0 ? <div className="mt-8">
-                    <h2 className="font-thin text-2xl text-purple-700">Arweave</h2>
-                    <ShowItem
-                      title="Block"
-                      content={blockNumber.toString()}
-                      url={`https://viewblock.io/arweave/block/${blockNumber}`}
-                      urlTitle="viewblock.io"
-                    />
-                    <ShowItem
-                      title="Timestamp"
-                      content={new Date(blockTimestamp).toLocaleString()}
-                    />
-                  </div> : <></>
-                }
-                {
-                  options.platform == 'ipfs' && blockNumber > 0 ? <div className="mt-8">
-                    <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
-                    <ShowItem
-                      title="Block"
-                      content={blockNumber.toString()}
-                    />
-                    <ShowItem
-                      title="Timestamp"
-                      content={new Date(blockTimestamp).toLocaleString()}
-                    />
-                    <ShowItem
-                      title="Contract"
-                      content={IPFSCidTimeInfoMappingContractAddress}
-                      url={`${chainInfo.scan}address/${IPFSCidTimeInfoMappingContractAddress}`}
-                      urlTitle={`${chainInfo.name} explorer`}
-                    />
-                    {
-                      remark && (remark as any).hash ? <ShowItem
-                        title="Txn hash"
-                        content={(remark as any).hash.content}
-                        url={(remark as any).hash.url}
-                        urlTitle={(remark as any).hash.urlTitle}
-                      /> : <></>
-                    }
-                  </div> : (options.platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
-                    <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
-                    <ShowItem
-                      title="Time infomation"
-                      content={'not found, no result'}
-                    />
-                  </div> : options.platform == 'ipfs' ? <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div> : <></>)
-                }
+                    </div> : (options.platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
+                      <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
+                      <ShowItem
+                        title="Time infomation"
+                        content={'not found, no result'}
+                      />
+                    </div> : options.platform == 'ipfs' ? <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div> : <></>)
+                  }
 
 
+                </div>
+                <div className="break-all">
+                  {
+                    /**
+                     * show validations component for customers.
+                     */
+                    (verifyServerMetadataSignatureStatus) ? <>
+                      <CustomerValidations metadata={metadata as MetadataType} />
+                    </> : <></>
+                  }
+                </div>
               </div>
-              <div className="break-all">
-                {
-                  /**
-                   * show validations component for customers.
-                   */
-                  (verifyServerMetadataSignatureStatus) ? <>
-                    <CustomerValidations metadata={metadata as MetadataType} />
-                  </> : <></>
-                }
-              </div>
-            </div>
-          }
+            }
 
-        </div>
-        <div>
-          {
-            /**
-             * show the post content.
-             */
-            (verifyServerMetadataSignatureStatus && (metadata as BaseSignatureMetadata).reference) ? <>
-              <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
-              {
-                (metadata as BaseSignatureMetadata).reference.map((item: IReference, index) => {
-                  const body = item.body as AuthorDigestMetadata;
-                  if (body.title && body.content) {
-                    return <div key={index}>
-                      <div className=" shadow-inner border rounded border-purple-300 mt-2 p-4">
-                        <h2 className="my-2 text-2xl">{body.title}</h2>
-                        <div className="prose">
-                          {
-                            renderHTML(md.render((body.content)))
-                          }
+          </div>
+          <div>
+            {
+              /**
+               * show the post content.
+               */
+              (verifyServerMetadataSignatureStatus && (metadata as BaseSignatureMetadata).reference) ? <>
+                <h2 className="font-thin text-sm text-purple-700" >Post Content</h2>
+                {
+                  (metadata as BaseSignatureMetadata).reference.map((item: IReference, index) => {
+                    const body = item.body as AuthorDigestMetadata;
+                    if (body.title && body.content) {
+                      return <div key={index}>
+                        <div className=" shadow-inner border rounded border-purple-300 mt-2 p-4">
+                          <h2 className="my-2 text-2xl">{body.title}</h2>
+                          <div className="prose">
+                            {
+                              renderHTML(md.render((body.content)))
+                            }
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  } else {
-                    return <div key={index} className="font-thin text-xs text-purple-700"></div>
-                  }
-                })
-              }
-            </> : <></>
-          }
+                    } else {
+                      return <div key={index} className="font-thin text-xs text-purple-700"></div>
+                    }
+                  })
+                }
+              </> : <></>
+            }
 
-        </div>
-        <ViewerFooter />
-      </main>
-    </DataSourceContext.Provider>
+          </div>
+          <ViewerFooter />
+        </main>
+      </DataSourceContext.Provider>
+    </MetadataVersion.Provider>
   </>;
 }
 
