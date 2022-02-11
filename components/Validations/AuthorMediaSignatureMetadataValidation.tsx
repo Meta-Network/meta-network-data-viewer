@@ -15,7 +15,6 @@ const AuthorMediaSignatureMetadataValidation = (props: ValidatioProps) => {
   const { metadata } = props;
   const [verifyStatus, setVerifyStatus] = useState<VerifyStatus>(VerifyStatus.Unverified);
   const [customerMetaData, setCustomerMetaData] = useState<string>('');
-
   const [customerSource, setCustomerSource] = useState<string>('');
   const { authorMediaSign } = initMetaSignatureUtil(props.version || 1);
 
