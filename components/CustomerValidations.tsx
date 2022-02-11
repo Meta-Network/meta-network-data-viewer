@@ -1,4 +1,4 @@
-import { BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '../utils/MetaSignature';
+import { BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '../utils/metaSignature';
 import { MetadataType } from '../utils/types';
 
 import SignatureMetadataValidation from './Validations/SignatureMetadataValidation';
@@ -19,9 +19,6 @@ interface IReference {
 const CustomerValidations = (props: ICustomerValidations) => {
 
   const { metadata } = props;
-
-  // console.log("CustomerValidations", metadata);
-
   if ((metadata as BaseSignatureMetadata).reference && (metadata as BaseSignatureMetadata).reference.length > 0) {
     const signatureMetadata: BaseSignatureMetadata = metadata as BaseSignatureMetadata;
     return <>

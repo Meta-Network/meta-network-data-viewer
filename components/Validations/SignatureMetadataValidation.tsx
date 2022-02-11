@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { BaseSignatureMetadata, authorDigestSign } from '../../utils/MetaSignature';
+import { BaseSignatureMetadata, authorDigestSign } from '../../utils/metaSignature';
 import { VerifyStatus } from '../../utils/status';
-import VerifyResult from '../VerifyResult';
-import ShowItem from '../ShowItem';
+import VerifyResult from '../PageElements/VerifyResult';
+import ShowItem from '../PageElements/ShowItem';
 
 type SignatureMetadataValidationProps = {
   metadata: BaseSignatureMetadata
