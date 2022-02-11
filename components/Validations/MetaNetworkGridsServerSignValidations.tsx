@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { BatchGridActionsMetadata, metaNetworkGridsServerSign } from '../../utils/MetaSignature';
+import { BatchGridActionsMetadata, metaNetworkGridsServerSign } from '../../utils/metaSignature';
 import { VerifyStatus } from '../../utils/status';
-import VerifyResult from '../VerifyResult';
-import ShowItem from '../ShowItem';
+import VerifyResult from '../PageElements/VerifyResult';
+import ShowItem from '../PageElements/ShowItem';
 
 // MetaNetworkGridsServerSignValidations
 type ValidatioProps = {

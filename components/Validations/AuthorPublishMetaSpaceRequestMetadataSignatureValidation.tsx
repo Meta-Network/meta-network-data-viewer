@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { AuthorDigestMetadata, authorPublishMetaSpaceRequest } from '../../utils/MetaSignature';
+import { AuthorDigestMetadata, authorPublishMetaSpaceRequest } from '../../utils/metaSignature';
 import { VerifyStatus } from '../../utils/status';
-import VerifyResult from '../VerifyResult';
-import ShowItem from '../ShowItem';
+import VerifyResult from '../PageElements/VerifyResult';
+import ShowItem from '../PageElements/ShowItem';
 
 interface AuthorPublishMetaSpaceRequestMetadataSignatureValidationProps {
   metadata: AuthorDigestMetadata

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import MetaSignGeneratorArea from './MetaSignGeneratorArea';
-import ViewerFooter from "./ViewerFooter";
+import ViewerFooter from "./PageElements/GlobalFooter";
 
 const MetaSignGenerator = () => {
 

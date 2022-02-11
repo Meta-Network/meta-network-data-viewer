@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import { VerifyStatus } from '../../utils/status';
-import VerifyResult from '../VerifyResult';
-import ShowItem from '../ShowItem';
-import Image from 'next/image';
-import DataSourceContext from '../../utils/dataSource'
-import { AuthorMediaSignatureMetadata, authorMediaSign } from '../../utils/MetaSignature';
+import VerifyResult from '../PageElements/VerifyResult';
+import ShowItem from '../PageElements/ShowItem';
+import DataSourceContext from '../../utils/dataSource';
+import { AuthorMediaSignatureMetadata, authorMediaSign } from '../../utils/metaSignature';
 import platformSourceList from '../../utils/source';
 
 type ValidatioProps = {

@@ -4,18 +4,17 @@ import {
   BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata,
   metaNetworkGridsServerSign, serverVerificationSign, AuthorMediaSignatureMetadata,
   authorMediaSign
-} from '../utils/MetaSignature';
+} from '../utils/metaSignature';
 import { MetadataType } from '../utils/types'
 import dynamic from 'next/dynamic';
-import axios from 'axios';
 import renderHTML from 'react-render-html';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CustomerValidations from './CustomerValidations';
 import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/arweave';
-import ShowItem from './ShowItem';
+import ShowItem from './PageElements/ShowItem';
 import DataSourceContext from '../utils/dataSource';
-import ViewerFooter from './ViewerFooter';
+import ViewerFooter from './PageElements/GlobalFooter';
 import testPayloads from '../utils/testPayloads.json';
 import { getMetadata as getSourceCountent } from '../services/metadata';
 import { getCidTimeInfo, IPFSCidTimeInfoMappingContractAddress, chainInfo, getTxnHashByCidAndBlockNumberFromRPC } from '../services/IPFSCidTimeInfoMapping';
