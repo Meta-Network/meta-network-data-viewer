@@ -1,9 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { MetadataPlatform, PlatformIdName, PlatformSourceName } from '../utils/types';
-import {
-  BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata,
-  metaNetworkGridsServerSign, serverVerificationSign, AuthorMediaSignatureMetadata,
-  authorMediaSign
+import initMetaSignatureUtil, {
+  BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata,
 } from '../utils/metaSignature';
 import { MetadataType } from '../utils/types'
 import dynamic from 'next/dynamic';
@@ -57,6 +55,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const getMetadata = useCallback(async () => {
     try {
 
+
       let content: any
       let verifyStatus: boolean = false;
 
@@ -65,7 +64,9 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
         verifyStatus = true;
       } else {
         content = await getSourceCountent(dataSource, id, options.timeout || 1000);
-
+        const metaDataVersion = Number(content['@version']?.split('.')[0]) >= 2 ? 2 : 1;
+        const { metaNetworkGridsServerSign,
+          serverVerificationSign, authorMediaSign } = initMetaSignatureUtil(metaDataVersion);
         if ((content as BatchGridActionsMetadata)['@type'] === 'meta-network-grids-server-sign') {
           console.log('Verify Meta Network grids');
           verifyStatus = metaNetworkGridsServerSign.verify(content as BatchGridActionsMetadata);

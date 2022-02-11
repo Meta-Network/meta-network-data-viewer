@@ -1,11 +1,10 @@
-import { BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '../utils/metaSignature';
 import { MetadataType } from '../utils/types';
-
 import SignatureMetadataValidation from './Validations/SignatureMetadataValidation';
 import AuthorDigestRequestMetadataValidation from './Validations/AuthorDigestRequestMetadataValidation';
 import AuthorPublishMetaSpaceRequestMetadataSignatureValidation from './Validations/AuthorPublishMetaSpaceRequestMetadataSignatureValidation';
 import MetaNetworkGridsServerSignValidations from './Validations/MetaNetworkGridsServerSignValidations';
 import AuthorMediaSignatureMetadataValidation from './Validations/AuthorMediaSignatureMetadataValidation';
+import { BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '../utils/metaSignature';
 interface ICustomerValidations {
   metadata: MetadataType
 }

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { AuthorDigestMetadata, authorDigest } from '../../utils/metaSignature';
+import initMetaSignatureUtil, { AuthorDigestMetadata } from '../../utils/metaSignature';
 import { VerifyStatus } from '../../utils/status';
 import VerifyResult from '../PageElements/VerifyResult';
 import ShowItem from '../PageElements/ShowItem';
 
 type AuthorDigestRequestMetadataValidatioProps = {
   metadata: AuthorDigestMetadata
-  refer?: string
+  refer?: string,
+  version?: number,
 }
 
 const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadataValidatioProps) => {
@@ -15,6 +16,7 @@ const AuthorDigestRequestMetadataValidation = (props: AuthorDigestRequestMetadat
   const [dig, setDig] = useState('');
   const [verifyStatus, setVerifyStatus] = useState<VerifyStatus>(VerifyStatus.Unverified);
   const [customerMetaData, setCustomerMetaData] = useState<string>('');
+  const { authorDigest } = initMetaSignatureUtil(props.version || 1);
 
   useEffect(() => {
     setVerifyStatus(VerifyStatus.Unverified);
