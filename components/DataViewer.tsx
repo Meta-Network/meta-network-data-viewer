@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useContext } from 'react';
 import { MetadataPlatform, PlatformIdName, PlatformSourceName } from '../utils/types';
 import initMetaSignatureUtil, {
   MetadataVersion,
@@ -50,7 +50,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const [blockNumber, setBlockNumber] = useState<Number>(null);
   const [blockTimestamp, setBlockTimestamp] = useState<number>(0);
   const [remark, setRemark] = useState({});
-  const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false })
+  const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
   const getMetadata = useCallback(async () => {
     try {
@@ -120,7 +120,8 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
         }
       });
     } catch (error) {
-      console.log(error);
+      console.log(`get IPFS timeinfo failure.`);
+      // console.log(error);
     }
   }, [options.id, setBlockNumber, setBlockTimestamp, setRemark]);
 
@@ -139,8 +140,11 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     if (options.platform === 'ipfs') {
       getIPFSTimeInfo();
     }
-
   }, [options, getArweaveTxnStatus, getIPFSTimeInfo]);
+
+  useEffect(() => {
+    console.log(`Metadata version: ${metadata['@version']}`);
+  }, [metadata]);
 
   return <>
     <MetadataVersion.Provider value={{ metadataVersion: metadata['@version'] }} >
@@ -166,7 +170,11 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
           </div>
           <div className="my-2 mt-8 w-full flex flex-col md:flex-row md:space-x-2">
             <div className="w-full md:w-2/3 my-2">
-              <h2 className="font-thin text-2xl text-purple-700">Origin Metadata</h2>
+              <div className="flex flex-row justify-start">
+                <h2 className="font-thin text-2xl text-purple-700">Origin Metadata</h2>
+
+              </div>
+
               <div className="p-2 border border-purple-300 rounded mt-2 bg-purple-50">
                 <div className="overflow-auto ">
                   <DynamicReactJson src={metadata as BaseSignatureMetadata} displayDataTypes={false} defaultValue={{ ok: false }} name={false} />
@@ -233,13 +241,25 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
                     </div> : (options.platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
                       <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
                       <ShowItem
-                        title="Time infomation"
-                        content={'not found, no result'}
+                        title="Time infomation not found."
+                        content={'No deposited information found.'}
                       />
                     </div> : options.platform == 'ipfs' ? <div className="text-xs font-thin text-purple-500 animate-pulse mt-4">Query CID time infomation...</div> : <></>)
                   }
 
-
+                  {
+                    <div className="mt-8">
+                      <h2 className="font-thin text-2xl text-purple-700">Metadata Info</h2>
+                      <MetadataVersion.Consumer>
+                        {({ metadataVersion }) => {
+                          return <ShowItem
+                            title="version"
+                            content={metadataVersion}
+                          />
+                        }}
+                      </MetadataVersion.Consumer>
+                    </div>
+                  }
                 </div>
                 <div className="break-all">
                   {
