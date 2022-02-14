@@ -17,6 +17,8 @@ const initMetaSignatureUtil = (version: number | string) => {
     metadataVersion = version >= 2 ? 2 : 1;
   }
 
+  // console.log('Metadata version:', metadataVersion);
+
   const metaSignatureUtil = metadataVersion === 2 ? metaSignatureUtilV2 : metaSignatureUtilV1;
   return {
     authorDigest: metadataVersion === 2 ? metaSignatureUtilV2.authorPostDigest : metaSignatureUtil.authorPostDigest,

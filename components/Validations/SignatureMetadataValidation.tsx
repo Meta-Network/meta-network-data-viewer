@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import initMetaSignatureUtil, { BaseSignatureMetadata } from '../../utils/metaSignature';
+import { useEffect, useState, useContext } from 'react';
+import initMetaSignatureUtil, { BaseSignatureMetadata, MetadataVersion } from '../../utils/metaSignature';
 import { VerifyStatus } from '../../utils/status';
 import VerifyResult from '../PageElements/VerifyResult';
 import ShowItem from '../PageElements/ShowItem';
@@ -16,7 +16,8 @@ const SignatureMetadataValidation = (props: SignatureMetadataValidationProps) =>
   const [sig, setSig] = useState<string>('');
   const [verifyStatus, setVerifyStatus] = useState<VerifyStatus>(VerifyStatus.Unverified);
   const [customerMetaData, setCustomerMetaData] = useState<string>('');
-  const { authorDigestSign } = initMetaSignatureUtil(props.version || 1);
+  const { metadataVersion } = useContext(MetadataVersion);
+  const { authorDigestSign } = initMetaSignatureUtil(metadataVersion || 1);
 
   useEffect(() => {
     setVerifyStatus(VerifyStatus.Unverified);

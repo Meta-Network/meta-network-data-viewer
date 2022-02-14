@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import initMetaSignatureUtil, { BatchGridActionsMetadata } from '../../utils/metaSignature';
+import { useContext, useEffect, useState } from 'react';
+import initMetaSignatureUtil, { BatchGridActionsMetadata, MetadataVersion } from '../../utils/metaSignature';
 import { VerifyStatus } from '../../utils/status';
 import VerifyResult from '../PageElements/VerifyResult';
 import ShowItem from '../PageElements/ShowItem';
@@ -15,7 +15,8 @@ const MetaNetworkGridsServerSignValidations = (props: ValidatioProps) => {
   const [dig, setDig] = useState('');
   const [verifyStatus, setVerifyStatus] = useState<VerifyStatus>(VerifyStatus.Unverified);
   const [customerMetaData, setCustomerMetaData] = useState<string>('');
-  const { metaNetworkGridsServerSign } = initMetaSignatureUtil(props.version || 1);
+  const { metadataVersion } = useContext(MetadataVersion);
+  const { metaNetworkGridsServerSign } = initMetaSignatureUtil(metadataVersion || 1);
 
   useEffect(() => {
     setVerifyStatus(VerifyStatus.Unverified);
