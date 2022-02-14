@@ -8,11 +8,19 @@ export type AuthorDigestMetadataV1 = metaSignatureUtilV1.AuthorPostDigestMetadat
 
 export const MetadataVersion = createContext<{ metadataVersion: string, metadataVersionNumber?: number }>({ metadataVersionNumber: 0, metadataVersion: '0' });
 
-const initMetaSignatureUtil = (version: number, versionString?: string) => {
-  const metaSignatureUtil = version === 2 ? metaSignatureUtilV2 : metaSignatureUtilV1;
+const initMetaSignatureUtil = (version: number | string) => {
+  let metadataVersion: number;
+
+  if (typeof version === 'string') {
+    metadataVersion = (Number(version?.split('.')[0]) >= 2) ? 2 : 1
+  } else if (typeof version === 'number') {
+    metadataVersion = version >= 2 ? 2 : 1;
+  }
+
+  const metaSignatureUtil = metadataVersion === 2 ? metaSignatureUtilV2 : metaSignatureUtilV1;
   return {
-    authorDigest: version === 2 ? metaSignatureUtilV2.authorPostDigest : metaSignatureUtil.authorPostDigest,
-    authorDigestSign: version === 2 ? metaSignatureUtilV2.authorPostDigestSign : metaSignatureUtil.authorPostDigestSign,
+    authorDigest: metadataVersion === 2 ? metaSignatureUtilV2.authorPostDigest : metaSignatureUtil.authorPostDigest,
+    authorDigestSign: metadataVersion === 2 ? metaSignatureUtilV2.authorPostDigestSign : metaSignatureUtil.authorPostDigestSign,
     ...metaSignatureUtil
   }
 }
