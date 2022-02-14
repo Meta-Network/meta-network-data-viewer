@@ -147,7 +147,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   }, [metadata]);
 
   return <>
-    <MetadataVersion.Provider value={{ metadataVersion: metadata['@version'] }} >
+    <MetadataVersion.Provider value={{ metadataVersion: metadata['@version'] || metadata['version'] || '1.0.0' }} >
       <DataSourceContext.Provider value={{ platform: props.options.platform, source: dataSource }}>
         <ToastContainer />
         <main className="mx-auto max-w-6xl p-4">
