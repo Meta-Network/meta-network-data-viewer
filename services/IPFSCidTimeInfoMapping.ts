@@ -38,9 +38,6 @@ export const getCidTimeInfo = async (cid: string) => {
   }
 }
 
-export const getTxnHashByCidAndBlockNumberFromScan = async (cid: string, blockNumber: string) => {
-
-}
 
 export const getTxnHashByCidAndBlockNumberFromRPC = async (cid: string, blockNumber: number) => {
   // const filterCid = contract.filters.TimeInfoSaved(cid);
