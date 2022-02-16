@@ -146,7 +146,57 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     console.log(`Metadata version: ${metadata['@version']}`);
   }, [metadata]);
 
-  return <>
+  if (metadata?.status == 'fetching...') {
+    return <div className='flex flex-row justify-center items-center h-screen bg-purple-500' style={{
+      visibility: 'visible',
+      opacity: 1,
+      transition: '.3s'
+    }}>
+      <div className=' border border-purple-50 p-5 animate-pulse rounded-sm w-80'>
+        <p className='text-purple-50 font-thin text-xs  break-words mr-16'>Resource: {id} </p>
+        <p className='text-purple-50 font-thin text-xs  break-words mr-16 mt-2'>From: {props.options.dataSourceName} </p>
+
+        <div className='flex flex-row justify-between items-end mt-12'>
+          <p className='text-purple-50 font-thin text-2xl text-center mt-4'> LOADING</p>
+
+          <div className='flex flex-row justify-center items-center  animate-spin'>
+            <svg width="60" height="60" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.25 0.721688L28.9724 8.64434C29.1271 8.73365 29.2224 8.89872 29.2224 9.07735V24.9226C29.2224 25.1013 29.1271 25.2663 28.9724 25.3557L15.25 33.2783C15.0953 33.3676 14.9047 33.3676 14.75 33.2783L1.02757 25.3557C0.872867 25.2663 0.777568 25.1013 0.777568 24.9226V9.07735C0.777568 8.89872 0.872867 8.73365 1.02757 8.64434L14.75 0.721688C14.9047 0.632371 15.0953 0.632371 15.25 0.721688Z" stroke="white" />
+              <circle cx="15" cy="17" r="7.5" stroke="white" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  if (metadata?.status == 'failure.') {
+    return <div className='flex flex-row justify-center items-center h-screen bg-red-800' style={{
+      visibility: 'visible',
+      opacity: 1,
+      transition: '.3s'
+    }}>
+      <div className=' border border-purple-50 p-5  rounded-sm w-80'>
+        <p className='text-purple-50 font-thin text-xs  break-words mr-16'>Resource: {id} </p>
+        <p className='text-purple-50 font-thin text-xs  break-words mr-16 mt-2'>From: {props.options.dataSourceName} </p>
+
+        <div className='flex flex-row justify-between items-end mt-12'>
+          <p className='text-purple-50 font-thin text-2xl text-center mt-4'> Failure</p>
+
+          <div className='flex flex-row justify-center items-center'>
+            <svg width="60" height="60" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.25 0.721688L28.9724 8.64434C29.1271 8.73365 29.2224 8.89872 29.2224 9.07735V24.9226C29.2224 25.1013 29.1271 25.2663 28.9724 25.3557L15.25 33.2783C15.0953 33.3676 14.9047 33.3676 14.75 33.2783L1.02757 25.3557C0.872867 25.2663 0.777568 25.1013 0.777568 24.9226V9.07735C0.777568 8.89872 0.872867 8.73365 1.02757 8.64434L14.75 0.721688C14.9047 0.632371 15.0953 0.632371 15.25 0.721688Z" stroke="white" />
+              <circle cx="15" cy="17" r="7.5" stroke="white" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  return <div style={{
+
+  }}>
     <MetadataVersion.Provider value={{ metadataVersion: metadata['@version'] || metadata['version'] || '1.0.0' }} >
       <DataSourceContext.Provider value={{ platform: props.options.platform, source: dataSource }}>
         <ToastContainer />
@@ -309,7 +359,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
         </main>
       </DataSourceContext.Provider>
     </MetadataVersion.Provider>
-  </>;
+  </div>;
 }
 
 export default DataViewer;
