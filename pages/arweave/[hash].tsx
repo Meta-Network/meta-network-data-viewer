@@ -11,7 +11,7 @@ const ArweaveViewer: any = (props) => {
   const { hash } = router.query;
 
   return <div>
-    <Header head={{ title: `Data Viewer: ${hash}` }} />
+    <Header head={{ title: `Data Viewer: ${hash || "loading..."}` }} />
     <DataViewer options={
       {
         platform: 'arweave',
