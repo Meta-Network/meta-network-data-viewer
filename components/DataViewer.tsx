@@ -11,9 +11,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CustomerValidations from './CustomerValidations';
 import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/arweave';
-import ShowItem from './PageElements/ShowItem';
+import { ShowItem, ViewerFooter } from './PageElements';
 import DataSourceContext from '../utils/dataSource';
-import ViewerFooter from './PageElements/GlobalFooter';
 import testPayloads from '../utils/testPayloads.json';
 import { getMetadata as getSourceCountent } from '../services/metadata';
 import { getCidTimeInfo, IPFSCidTimeInfoMappingContractAddress, chainInfo, getTxnHashByCidAndBlockNumberFromRPC } from '../services/IPFSCidTimeInfoMapping';
@@ -355,7 +354,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
             }
 
           </div>
-          <ViewerFooter />
+
         </main>
       </DataSourceContext.Provider>
     </MetadataVersion.Provider>

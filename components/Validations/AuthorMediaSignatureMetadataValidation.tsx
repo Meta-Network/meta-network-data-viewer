@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { VerifyStatus } from '../../utils/status';
-import VerifyResult from '../PageElements/VerifyResult';
-import ShowItem from '../PageElements/ShowItem';
+import { VerifyResult, ShowItem } from '../PageElements';
 import DataSourceContext from '../../utils/dataSource';
 import initMetaSignatureUtil, { AuthorMediaSignatureMetadata, MetadataVersion } from '../../utils/metaSignature';
 import platformSourceList from '../../utils/source';
