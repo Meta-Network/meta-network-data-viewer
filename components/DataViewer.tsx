@@ -11,10 +11,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CustomerValidations from './CustomerValidations';
 import { getArweaveBlockByHash, getArweaveTxnStatusByHash } from '../services/arweave';
-import { ShowItem, ViewerFooter } from './PageElements';
+import { ShowItem } from './PageElements';
 import DataSourceContext from '../utils/dataSource';
 import testPayloads from '../utils/testPayloads.json';
-import { getMetadata as getSourceCountent } from '../services/metadata';
+import { useMetadata } from '../services/metadata';
 import { getCidTimeInfo, IPFSCidTimeInfoMappingContractAddress, chainInfo, getTxnHashByCidAndBlockNumberFromRPC } from '../services/IPFSCidTimeInfoMapping';
 
 const md = require('markdown-it')().use(require('markdown-it-plantuml'));
@@ -42,14 +42,16 @@ interface IReference {
 function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   const { options } = props;
-  const [id, setId] = useState('');
-  const [dataSource, setDataSource] = useState('');
+  const [id, setId] = useState<string>(options.id);
+  const [dataSource, setDataSource] = useState<string>((options.defaultDataSource) || options.dataSourceList[0]);
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
   const [metadata, setMetadata] = useState<TMetadataType | MetadataType>({ status: 'fetching...' } as any);
   const [blockNumber, setBlockNumber] = useState<Number>(null);
   const [blockTimestamp, setBlockTimestamp] = useState<number>(0);
   const [remark, setRemark] = useState({});
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false });
+
+  const metadataResult = useMetadata(dataSource, options.id, options.timeout || 1000);
 
   const getMetadata = useCallback(async () => {
     try {
@@ -59,7 +61,8 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
         content = testPayloads;
         verifyStatus = true;
       } else {
-        content = await getSourceCountent(dataSource, id, options.timeout || 1000);
+        content = metadataResult.metadata;
+        if (typeof content === 'undefined') return;
         const metaDataVersion = Number(content['@version']?.split('.')[0]) >= 2 ? 2 : 1;
         const { metaNetworkGridsServerSign,
           serverVerificationSign, authorMediaSign } = initMetaSignatureUtil(metaDataVersion);
@@ -83,13 +86,12 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
         if (error.message.includes('Network Error')) {
           toast.error('Please check your connection');
         } else {
-          console.error(error)
-          toast.error('Something went wrong');
+          console.error('getMetadata', error);
         }
       }
       setMetadata({ status: 'failure.' } as any)
     }
-  }, [id, dataSource, options]);
+  }, [options.isTest, metadataResult]);
 
   const getArweaveTxnStatus = useCallback(async () => {
     if (!options.id) return;
@@ -101,7 +103,6 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   }, [options.id, setBlockNumber, setBlockTimestamp]);
 
   const getIPFSTimeInfo = useCallback(async () => {
-
     if (!options.id) return;
     try {
       const { timestamp, blockNumber } = await getCidTimeInfo(options.id);
@@ -132,20 +133,32 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     setId(options.id);
     setDataSource((options.defaultDataSource) || options.dataSourceList[0]);
     if (options.isTest) return;
-    if (options.platform === 'arweave') {
-      getArweaveTxnStatus();
+
+    try {
+      if (options.platform === 'arweave') {
+        getArweaveTxnStatus();
+      }
+      if (options.platform === 'ipfs') {
+        getIPFSTimeInfo();
+      }
+    } catch (error) {
+      if (metadataResult.isError) {
+
+      } else {
+        console.log(`[x]Get chain info error`);
+        console.log(error);
+      }
     }
 
-    if (options.platform === 'ipfs') {
-      getIPFSTimeInfo();
-    }
-  }, [options, getArweaveTxnStatus, getIPFSTimeInfo]);
+
+  }, [options, getArweaveTxnStatus, getIPFSTimeInfo, metadataResult.isError]);
 
   useEffect(() => {
     console.log(`Metadata version: ${metadata['@version']}`);
   }, [metadata]);
 
-  if (metadata?.status == 'fetching...') {
+  // if (metadata?.status == 'fetching...') {
+  if (metadataResult.isLoading) {
     return <div className='flex flex-row justify-center items-center h-screen bg-purple-500' style={{
       visibility: 'visible',
       opacity: 1,
@@ -169,7 +182,8 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     </div>
   }
 
-  if (metadata?.status == 'failure.') {
+  // if (metadata?.status == 'failure.') {
+  if (metadataResult.isError) {
     return <div className='flex flex-row justify-center items-center h-screen bg-red-800' style={{
       visibility: 'visible',
       opacity: 1,
@@ -193,9 +207,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     </div>
   }
 
-  return <div style={{
-
-  }}>
+  return <div>
     <MetadataVersion.Provider value={{ metadataVersion: metadata['@version'] || metadata['version'] || '1.0.0' }} >
       <DataSourceContext.Provider value={{ platform: props.options.platform, source: dataSource }}>
         <ToastContainer />

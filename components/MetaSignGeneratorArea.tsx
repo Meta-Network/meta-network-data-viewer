@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { ShowItem } from "./PageElements";
 import * as signUtils from '@metaio/meta-signature-util-v2';
