@@ -7,7 +7,7 @@ import Link from 'next/link'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ViewerFooter from '../components/PageElements/GlobalFooter';
+import { ViewerFooter } from '../components/PageElements';
 
 const Home: NextPage = () => {
 

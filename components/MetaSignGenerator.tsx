@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import MetaSignGeneratorArea from './MetaSignGeneratorArea';
-import ViewerFooter from "./PageElements/GlobalFooter";
+import { ViewerFooter } from "./PageElements";
 
 const MetaSignGenerator = () => {
 
@@ -51,7 +51,7 @@ const MetaSignGenerator = () => {
 
   return <div className="">
     <Head>
-      <title>MetaData Generator</title>
+      <title>Metadata Generator</title>
       <meta name="description" content="meta-network-data-viewer" />
       <link rel="icon" href="/favicon.ico" />
     </Head>

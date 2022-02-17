@@ -1,8 +1,7 @@
-import Head from 'next/head';
 import ipfsGatewayList from '../../ipfs-gateway.json';
-// import DataViewer from '../../components/DataViewer';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
+import { Header, ViewerFooter } from '../../components/PageElements';
 const DataViewer = dynamic(() => import('../../components/DataViewer'));
 
 const IPFSViewer: any = () => {
@@ -11,16 +10,7 @@ const IPFSViewer: any = () => {
   const { cid } = router.query;
 
   return <div>
-    <Head>
-      <title>meta-network-data-viewer</title>
-      <meta name="description" content="meta-network-data-viewer" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-    <header className=" bg-purple-900">
-      <div className="mx-auto max-w-6xl p-4">
-        <h1 className="m-0 text-2xl font-thin text-white">meta-network-data-viewer</h1>
-      </div>
-    </header>
+    <Header head={{ title: `Data Viewer: ${cid || "loading..."}` }} />
     <DataViewer options={
       {
         platform: 'ipfs',
@@ -31,6 +21,7 @@ const IPFSViewer: any = () => {
         timeout: 20000
       }
     } />
+    <ViewerFooter />
   </div>
 }
 
