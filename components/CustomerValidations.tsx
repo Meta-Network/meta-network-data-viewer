@@ -1,11 +1,10 @@
-import { BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '@metaio/meta-signature-util';
 import { MetadataType } from '../utils/types';
-
 import SignatureMetadataValidation from './Validations/SignatureMetadataValidation';
 import AuthorDigestRequestMetadataValidation from './Validations/AuthorDigestRequestMetadataValidation';
 import AuthorPublishMetaSpaceRequestMetadataSignatureValidation from './Validations/AuthorPublishMetaSpaceRequestMetadataSignatureValidation';
 import MetaNetworkGridsServerSignValidations from './Validations/MetaNetworkGridsServerSignValidations';
 import AuthorMediaSignatureMetadataValidation from './Validations/AuthorMediaSignatureMetadataValidation';
+import { BaseSignatureMetadata, AuthorDigestMetadata, BatchGridActionsMetadata, AuthorMediaSignatureMetadata } from '../utils/metaSignature';
 interface ICustomerValidations {
   metadata: MetadataType
 }
@@ -19,9 +18,6 @@ interface IReference {
 const CustomerValidations = (props: ICustomerValidations) => {
 
   const { metadata } = props;
-
-  // console.log("CustomerValidations", metadata);
-
   if ((metadata as BaseSignatureMetadata).reference && (metadata as BaseSignatureMetadata).reference.length > 0) {
     const signatureMetadata: BaseSignatureMetadata = metadata as BaseSignatureMetadata;
     return <>

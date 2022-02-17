@@ -1,4 +1,4 @@
-import { VerifyStatus } from '../utils/status';
+import { VerifyStatus } from '../../utils/status';
 
 type VerifyResultProps = {
   status: VerifyStatus;

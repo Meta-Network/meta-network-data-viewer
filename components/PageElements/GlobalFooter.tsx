@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 const ViewerFooter = () => {
-  return <footer className="flex flex-col md:flex-row w-full py-12 justify-between font-light text-sm ">
+  return <footer className="mx-auto max-w-6xl p-4 flex flex-col md:flex-row w-full py-12 justify-between font-light text-sm ">
     <div className='text-purple-400'>Github: <Link href={'https://github.com/Meta-Network/meta-network-data-viewer'}>Meta-Network/meta-network-data-viewer</Link></div>
     <div className='text-purple-400'>LICENSE: <Link href="https://github.com/Meta-Network/meta-network-data-viewer/blob/main/LICENSE">GNU Affero General Public License v3.0</Link></div>
   </footer>

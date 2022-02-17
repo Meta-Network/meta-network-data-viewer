@@ -1,13 +1,12 @@
 import Head from "next/head";
-import * as signUtils from '@metaio/meta-signature-util';
-import * as utils from '@metaio/meta-signature-util/lib/utils';
+import * as signUtils from '@metaio/meta-signature-util-v2';
+import * as utils from '@metaio/meta-signature-util-v2/lib/utils';
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import ShowItem from "./ShowItem";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import MetaSignGeneratorArea from './MetaSignGeneratorArea';
-import ViewerFooter from "./ViewerFooter";
+import { ViewerFooter } from "./PageElements";
 
 const MetaSignGenerator = () => {
 
@@ -52,7 +51,7 @@ const MetaSignGenerator = () => {
 
   return <div className="">
     <Head>
-      <title>MetaData Generator</title>
+      <title>Metadata Generator</title>
       <meta name="description" content="meta-network-data-viewer" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
