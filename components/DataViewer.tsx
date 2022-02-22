@@ -15,6 +15,7 @@ import { ShowItem } from './PageElements';
 import DataSourceContext from '../utils/dataSource';
 import testPayloads from '../utils/testPayloads.json';
 import { useMetadata } from '../services/metadata';
+import ArweaveTxnStatus from './ArweaveTxnStatus';
 import { getCidTimeInfo, IPFSCidTimeInfoMappingContractAddress, chainInfo, getTxnHashByCidAndBlockNumberFromRPC } from '../services/IPFSCidTimeInfoMapping';
 
 const md = require('markdown-it')().use(require('markdown-it-plantuml'));
@@ -93,14 +94,14 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     }
   }, [options.isTest, metadataResult]);
 
-  const getArweaveTxnStatus = useCallback(async () => {
-    if (!options.id) return;
-    const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
-    const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
-    console.log(block_height, block_indep_hash, timestamp);
-    setBlockNumber(block_height);
-    setBlockTimestamp(timestamp * 1000);
-  }, [options.id, setBlockNumber, setBlockTimestamp]);
+  // const getArweaveTxnStatus = useCallback(async () => {
+  //   if (!options.id) return;
+  //   const { block_height, block_indep_hash } = await getArweaveTxnStatusByHash(options.id);
+  //   const { timestamp } = await getArweaveBlockByHash(block_indep_hash);
+  //   console.log(block_height, block_indep_hash, timestamp);
+  //   setBlockNumber(block_height);
+  //   setBlockTimestamp(timestamp * 1000);
+  // }, [options.id, setBlockNumber, setBlockTimestamp]);
 
   const getIPFSTimeInfo = useCallback(async () => {
     if (!options.id) return;
@@ -136,9 +137,11 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
     try {
       if (options.platform === 'arweave') {
-        getArweaveTxnStatus();
+        // TODO SWITCH TO SWR
+        // getArweaveTxnStatus();
       }
       if (options.platform === 'ipfs') {
+        // TODO SWITCH TO SWR
         getIPFSTimeInfo();
       }
     } catch (error) {
@@ -151,7 +154,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
     }
 
 
-  }, [options, getArweaveTxnStatus, getIPFSTimeInfo, metadataResult.isError]);
+  }, [options, getIPFSTimeInfo, metadataResult.isError]);
 
   useEffect(() => {
     console.log(`Metadata version: ${metadata['@version']}`);
@@ -260,19 +263,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
                       </div>
                   }
                   {
-                    options.platform == 'arweave' && blockNumber > 0 ? <div className="mt-8">
-                      <h2 className="font-thin text-2xl text-purple-700">Arweave</h2>
-                      <ShowItem
-                        title="Block"
-                        content={blockNumber.toString()}
-                        url={`https://viewblock.io/arweave/block/${blockNumber}`}
-                        urlTitle="viewblock.io"
-                      />
-                      <ShowItem
-                        title="Timestamp"
-                        content={new Date(blockTimestamp).toLocaleString()}
-                      />
-                    </div> : <></>
+                    options.platform == 'arweave' && !(metadataResult.isError) ? <ArweaveTxnStatus hash={options.id} /> : <></>
                   }
                   {
                     options.platform == 'ipfs' && blockNumber > 0 ? <div className="mt-8">
