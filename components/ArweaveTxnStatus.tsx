@@ -27,10 +27,12 @@ const ArweaveTimestamp = (props: ArweaveTimestampProps) => {
   />
 
   if (arweaveBlockResult?.arweaveBlock?.timestamp) {
+
+    console.log(`!!!`, arweaveBlockResult.arweaveBlock.timestamp);
     return <>
       <ShowItem
         title="Timestamp"
-        content={new Date(arweaveBlockResult.arweaveBlock.timestamp).toLocaleString()}
+        content={new Date(arweaveBlockResult.arweaveBlock.timestamp * 1000).toLocaleString()}
       /> </>;
   } else {
     return <></>;
