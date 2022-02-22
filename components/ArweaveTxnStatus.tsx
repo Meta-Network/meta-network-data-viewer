@@ -10,6 +10,13 @@ type ArweaveTimestampProps = {
   block_indep_hash: string
 }
 
+/**
+ * Struct:
+ * <ArweaveTxnStatus>
+ *  <ArweaveTimestamp/>
+ * </ArweaveTxnStatus>
+ */
+
 const ArweaveTimestamp = (props: ArweaveTimestampProps) => {
 
   const arweaveBlockResult = useGetArweaveBlockByHash(props.block_indep_hash);
