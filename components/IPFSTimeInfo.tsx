@@ -19,6 +19,7 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
     if (!ipfsHash) return;
     try {
       const { timestamp, blockNumber } = await getCidTimeInfo(ipfsHash);
+      console.log('getIPFSTimeInfo::', timestamp, blockNumber);
       setBlock(Number(blockNumber));
       setBlockTimestamp(Number(timestamp) * 1000);
       const hash = await getTxnHashByCidAndBlockNumberFromRPC(ipfsHash, Number(blockNumber));
