@@ -40,8 +40,10 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
   }, [ipfsHash, setBlock, setBlockTimestamp, setRemark]);
 
   useEffect(() => {
-    getIPFSTimeInfo();
-  }, [getIPFSTimeInfo])
+    if (platform === 'ipfs') {
+      getIPFSTimeInfo();
+    }
+  }, [getIPFSTimeInfo, platform]);
 
   return <>
     {
