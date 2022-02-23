@@ -11,7 +11,7 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
 
   const { ipfsHash, platform } = props;
 
-  const [blockNumber, setBlockNumber] = useState(null);
+  const [block, setBlock] = useState(null);
   const [blockTimestamp, setBlockTimestamp] = useState(null);
   const [remark, setRemark] = useState({});
 
@@ -19,7 +19,7 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
     if (!ipfsHash) return;
     try {
       const { timestamp, blockNumber } = await getCidTimeInfo(ipfsHash);
-      setBlockNumber(Number(blockNumber));
+      setBlock(Number(blockNumber));
       setBlockTimestamp(Number(timestamp) * 1000);
       const hash = await getTxnHashByCidAndBlockNumberFromRPC(ipfsHash, Number(blockNumber));
       console.log(hash);
@@ -36,7 +36,7 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
       console.log(`get IPFS timeinfo failure.`);
       console.log(error);
     }
-  }, [ipfsHash, setBlockNumber, setBlockTimestamp, setRemark]);
+  }, [ipfsHash, setBlock, setBlockTimestamp, setRemark]);
 
   useEffect(() => {
     getIPFSTimeInfo();
@@ -44,11 +44,11 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
 
   return <>
     {
-      platform == 'ipfs' && blockNumber > 0 ? <div className="mt-8">
+      platform == 'ipfs' && block > 0 ? <div className="mt-8">
         <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
         <ShowItem
           title="Block"
-          content={blockNumber.toString()}
+          content={block.toString()}
         />
         <ShowItem
           title="Timestamp"
@@ -68,7 +68,7 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
             urlTitle={(remark as any).hash.urlTitle}
           /> : <></>
         }
-      </div> : (platform == 'ipfs' && blockNumber === 0 ? <div className="mt-8">
+      </div> : (platform == 'ipfs' && block === 0 ? <div className="mt-8">
         <h2 className="font-thin text-2xl text-purple-700">Time information</h2>
         <ShowItem
           title="Time infomation not found."
