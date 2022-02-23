@@ -34,7 +34,7 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
       });
     } catch (error) {
       console.log(`get IPFS timeinfo failure.`);
-      // console.log(error);
+      console.log(error);
     }
   }, [ipfsHash, setBlockNumber, setBlockTimestamp, setRemark]);
 
