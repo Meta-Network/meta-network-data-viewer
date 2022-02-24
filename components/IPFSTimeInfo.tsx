@@ -18,6 +18,7 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
   const getIPFSTimeInfo = useCallback(async () => {
     if (!ipfsHash) return;
     try {
+      console.log(ipfsHash);
       const { timestamp, blockNumber } = await getCidTimeInfo(ipfsHash);
       console.log('getIPFSTimeInfo::', timestamp, blockNumber);
       setBlock(Number(blockNumber));
