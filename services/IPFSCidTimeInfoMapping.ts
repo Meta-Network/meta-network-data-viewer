@@ -30,11 +30,15 @@ const provider = new ethers.providers.JsonRpcProvider(chainInfo.rpc, {
 export const contract = new ethers.Contract(IPFSCidTimeInfoMappingContractAddress, IPFSCidTimeInfoMapping, provider);
 
 export const getCidTimeInfo = async (cid: string) => {
-  const cidTimeInfo = await contract.cidTimeInfoMapping(cid);
-  const { timestamp, blockNumber } = cidTimeInfo;
-  return {
-    timestamp: ethers.utils.formatUnits(timestamp, 0),
-    blockNumber: ethers.utils.formatUnits(blockNumber, 0)
+  try {
+    const cidTimeInfo = await contract.cidTimeInfoMapping(cid);
+    const { timestamp, blockNumber } = cidTimeInfo;
+    return {
+      timestamp: ethers.utils.formatUnits(timestamp, 0),
+      blockNumber: ethers.utils.formatUnits(blockNumber, 0)
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
