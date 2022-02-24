@@ -47,9 +47,6 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const [dataSource, setDataSource] = useState<string>((options.defaultDataSource) || options.dataSourceList[0]);
   const [verifyServerMetadataSignatureStatus, setVerifyServerMetadataSignatureStatus] = useState(false);
   const [metadata, setMetadata] = useState<TMetadataType | MetadataType>({ status: 'fetching...' } as any);
-  const [blockNumber, setBlockNumber] = useState<Number>(null);
-  const [blockTimestamp, setBlockTimestamp] = useState<number>(0);
-  const [remark, setRemark] = useState({});
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
   const metadataResult = useMetadata(dataSource, options.id, options.timeout || 1000);

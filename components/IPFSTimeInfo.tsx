@@ -15,7 +15,8 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
   const [blockTimestamp, setBlockTimestamp] = useState(null);
   const [remark, setRemark] = useState({});
 
-  const getIPFSTimeInfo = useCallback(async () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getIPFSTimeInfo = async () => {
     if (!ipfsHash) return;
     try {
       console.log(ipfsHash);
@@ -38,7 +39,7 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
       console.log(`get IPFS timeinfo failure.`);
       console.log(error);
     }
-  }, [ipfsHash, setBlock, setBlockTimestamp, setRemark]);
+  }
 
   useEffect(() => {
     if (platform === 'ipfs' && window.document) {
