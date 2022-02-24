@@ -45,7 +45,8 @@ const IPFSTimeInfo = (props: IPFSTimeInfoProps) => {
     if (platform === 'ipfs' && window.document) {
       getIPFSTimeInfo();
     }
-  }, [getIPFSTimeInfo, platform]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <>
     {
