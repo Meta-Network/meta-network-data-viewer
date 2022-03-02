@@ -16,7 +16,7 @@ import testPayloads from '../utils/testPayloads.json';
 import { useMetadata } from '../services/metadata';
 import ArweaveTxnStatus from './ArweaveTxnStatus';
 import IPFSTimeInfo from './IPFSTimeInfo';
-import { getCidTimeInfo, IPFSCidTimeInfoMappingContractAddress, chainInfo, getTxnHashByCidAndBlockNumberFromRPC } from '../services/IPFSCidTimeInfoMapping';
+import { data } from 'msw/lib/types/context';
 
 const md = require('markdown-it')().use(require('markdown-it-plantuml'));
 
@@ -49,7 +49,7 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
   const [metadata, setMetadata] = useState<TMetadataType | MetadataType>({ status: 'fetching...' } as any);
   const DynamicReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
-  const metadataResult = useMetadata(dataSource, options.id, options.timeout || 1000);
+  let metadataResult = useMetadata(dataSource, options.id, options.timeout || 1000);
 
   const getMetadata = useCallback(async () => {
     try {
@@ -184,6 +184,20 @@ function DataViewer<TMetadataType>(props: IDataViewerProps) {
 
   // if (metadata?.status == 'failure.') {
   if (metadataResult.isError) {
+
+    if (options.platform === 'ipfs' && (typeof options.dataSourceList != 'string')) {
+      const dataSourceKey = options.dataSourceList.indexOf(dataSource);
+      if (dataSourceKey > -1) {
+        if (dataSourceKey == options.dataSourceList.length - 1) {
+          setDataSource(options.dataSourceList[0]);
+        } else {
+          setDataSource(options.dataSourceList[dataSourceKey + 1]);
+        }
+      } else {
+        setDataSource(options.dataSourceList[0]);
+      }
+    }
+
     return <div className='flex flex-row justify-center items-center h-screen bg-red-800' style={{
       visibility: 'visible',
       opacity: 1,

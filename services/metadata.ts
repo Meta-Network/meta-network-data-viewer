@@ -7,7 +7,12 @@ export const getMetadata = async (dataSource: string, id: string, timeout?: numb
   return await (result).data;
 }
 
-export const useMetadata = (source: string, id: string, timeout?: number) => {
+export const useMetadata = (source: string, id: string, timeout?: number, options?: any) => {
+
+  // if (options.onNetworkError) {
+
+  // }
+
   const { data, error } = useSWR(`${source.replace(':hash', encodeURIComponent(id))}`, fetcher, { loadingTimeout: timeout || 5000 })
   return {
     metadata: data,
